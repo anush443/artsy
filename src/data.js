@@ -25,33 +25,33 @@ export const sliderItems = [
 export const categories = [
   {
     id: 1,
-    img: "https://images.pexels.com/photos/2440079/pexels-photo-2440079.jpeg?cs=srgb&dl=pexels-ian-beckley-2440079.jpg&fm=jpg",
+    img: "/Assests/categories/nature.jpg",
     title: "Nature",
   },
 
   {
     id: 2,
-    img: "https://images.pexels.com/photos/3991468/pexels-photo-3991468.png?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1g",
+    img: "/Assests/categories/potrait.jpg",
     title: "Potrait",
   },
   {
     id: 3,
-    img: "https://images.pexels.com/photos/1013328/pexels-photo-1013328.jpeg?cs=srgb&dl=pexels-godisable-jacob-1013328.jpg&fm=jpg",
+    img: "/Assests/categories/urban.jpg",
     title: "Urban",
   },
   {
     id: 4,
-    img: "https://images.pexels.com/photos/1013328/pexels-photo-1013328.jpeg?cs=srgb&dl=pexels-godisable-jacob-1013328.jpg&fm=jpg",
+    img: "/Assests/categories/pop culture.jpeg",
     title: "Pop Culture",
   },
   {
     id: 5,
-    img: "https://images.pexels.com/photos/2832382/pexels-photo-2832382.jpeg?cs=srgb&dl=pexels-anni-roenkae-2832382.jpg&fm=jpg",
+    img: "/Assests/categories/everyday life.jpg",
     title: "Everyday Life",
   },
   {
     id: 6,
-    img: "https://images.pexels.com/photos/2440079/pexels-photo-2440079.jpeg?cs=srgb&dl=pexels-ian-beckley-2440079.jpg&fm=jpg",
+    img: "/Assests/categories/street art.jpg",
     title: "Street Art",
   },
 ];

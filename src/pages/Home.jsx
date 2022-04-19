@@ -7,6 +7,11 @@ import Slider from "../Components/Slider";
 import { popularProducts } from "../data";
 
 const Home = () => {
+  // const getData = () =>
+  //   fetch("http://localhost:5000/api/users/user")
+  //     .then((response) => response.json())
+  //     .then((data) => console.log(data));
+
   return (
     <div>
       <Navbar />

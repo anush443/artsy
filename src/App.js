@@ -6,7 +6,7 @@ import Product from "./pages/Product";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Cart from "./pages/Cart";
-import { sliderItems } from "./data";
+import Navbar from "./Components/Navbar";
 
 function App() {
   return (

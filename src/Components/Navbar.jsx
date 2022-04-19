@@ -2,9 +2,11 @@ import { ShoppingCartOutlined } from "@material-ui/icons";
 import React from "react";
 import styled from "styled-components";
 import Badge from "@mui/material/Badge";
+import { mobile } from "../responsive";
 
 const Container = styled.div`
   height: 60px;
+  ${mobile({ height: "50px" })}
 `;
 
 const Wrapper = styled.div`
@@ -12,6 +14,7 @@ const Wrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  ${mobile({ padding: "10px 0" })}
 `;
 
 const Left = styled.div`
@@ -19,6 +22,7 @@ const Left = styled.div`
   display: flex;
   align-items: center;
   padding-left: 25px;
+  ${mobile({ paddingLeft: "0px" })}
 `;
 
 const Center = styled.div`
@@ -34,6 +38,7 @@ const Links = styled.h3`
 
 const Logo = styled.h1`
   font-weight: bold;
+  ${mobile({ fontSize: "10px" })}
 `;
 
 const Right = styled.div`
@@ -41,12 +46,14 @@ const Right = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-end;
+  ${mobile({ flex: 2, justifyContent: "center" })}
 `;
 
 const MenuItem = styled.div`
   font-size: 20px;
   cursor: pointer;
   margin-left: 25px;
+  ${mobile({ fontSize: "12px" })}
 `;
 
 const Navbar = () => {
