@@ -1,23 +1,45 @@
 import "./App.css";
 import Home from "./pages/Home";
-import Announcements from "./Components/Announcements";
-import ProductList from "./pages/ProductList";
-import Product from "./pages/Product";
+
+import ArtworkList from "./pages/ArtworkList";
+import Artwork from "./pages/Artwork";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Cart from "./pages/Cart";
-import Navbar from "./Components/Navbar";
+
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 
 function App() {
+  const user = true;
   return (
     <>
-      <Announcements />
-      <Home />
-      <ProductList />
-      <Product />
-      <Register />
-      <Login />
-      <Cart />
+      <Router>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/artworks/:category" element={<ArtworkList />} />
+          <Route path="/artwork/:id" element={<Artwork />} />
+          <Route path="/cart" element={<Cart />} />
+
+          <Route
+            path="/login"
+            element={user ? <Navigate to="/" /> : <Login />}
+          />
+          <Route
+            path="/register"
+            element={user ? <Navigate to="/" /> : <Register />}
+          />
+        </Routes>
+      </Router>
+      {/* 
+     
+      
+      
+       */}
     </>
   );
 }

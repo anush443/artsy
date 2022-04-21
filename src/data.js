@@ -9,7 +9,7 @@ export const sliderItems = [
   {
     id: 2,
     img: "https://i.ibb.co/DG69bQ4/2.png",
-    title: "Nature",
+    title: "Landscape",
     desc: "Explore",
     bg: "fcf1ed",
   },
@@ -25,34 +25,40 @@ export const sliderItems = [
 export const categories = [
   {
     id: 1,
-    img: "/Assests/categories/nature.jpg",
-    title: "Nature",
+    img: "/Assests/categories/landscape.jpg",
+    title: "Landscape_img",
+    cat: "landscape",
   },
 
   {
     id: 2,
     img: "/Assests/categories/potrait.jpg",
-    title: "Potrait",
+    title: "Potrait_img",
+    cat: "potrait",
   },
   {
     id: 3,
     img: "/Assests/categories/urban.jpg",
-    title: "Urban",
+    title: "Urban_img",
+    cat: "urban",
   },
   {
     id: 4,
     img: "/Assests/categories/pop culture.jpeg",
-    title: "Pop Culture",
+    title: "Pop Culture_img",
+    cat: "popculture",
   },
   {
     id: 5,
     img: "/Assests/categories/everyday life.jpg",
-    title: "Everyday Life",
+    title: "Everyday Life_img",
+    cat: "everydaylife",
   },
   {
     id: 6,
     img: "/Assests/categories/street art.jpg",
-    title: "Street Art",
+    title: "Street Art_img",
+    cat: "streetart",
   },
 ];
 
@@ -63,7 +69,7 @@ export const popularProducts = [
   },
   {
     id: 2,
-    img: "https://cdn.shopify.com/s/files/1/0101/4832/products/Angela_Natural_Tee.png?v=1606780388",
+    img: "/Assests/categories/street art.jpg",
   },
   {
     id: 3,
@@ -83,10 +89,10 @@ export const popularProducts = [
   },
   {
     id: 7,
-    img: "https://www.vintageindustries.nl/download_front/qympzk1762/2217_Arrow_Jacket_Forest.png",
+    img: "/Assests/categories/street art.jpg",
   },
   {
     id: 8,
-    img: "https://www.pngarts.com/files/3/Women-Jacket-PNG-High-Quality-Image.png",
+    img: "https://i.ibb.co/pPyZsMj/Stoned-Ape-5.png",
   },
 ];

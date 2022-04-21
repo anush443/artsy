@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { Link } from "react-router-dom";
 
 const Card = styled.div`
   margin: 30px auto;
@@ -42,17 +43,23 @@ const Title = styled.p`
   margin-bottom: 20px;
 `;
 
+const aa = styled.a`
+  text-decoration: none;
+`;
+
 const CategoryItem = ({ item }) => {
   return (
     <>
-      <Card>
-        <CardImage>
-          <Image src={item.img} key={item.id} />
-        </CardImage>
-        <Info>
-          <Title>{item.title}</Title>
-        </Info>
-      </Card>
+      <Link to={`/artworks/${item.cat}`} style={{ textDecoration: "none" }}>
+        <Card>
+          <CardImage>
+            <Image src={item.img} key={item.id} />
+          </CardImage>
+          <Info>
+            <Title>{item.cat}</Title>
+          </Info>
+        </Card>
+      </Link>
     </>
   );
 };

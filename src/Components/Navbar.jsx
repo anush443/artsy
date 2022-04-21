@@ -3,6 +3,8 @@ import React from "react";
 import styled from "styled-components";
 import Badge from "@mui/material/Badge";
 import { mobile } from "../responsive";
+import { Link } from "react-router-dom";
+import Categories from "./Categories";
 
 const Container = styled.div`
   height: 60px;
@@ -64,8 +66,12 @@ const Navbar = () => {
           <Logo>ArtSy.</Logo>
         </Left>
         <Center>
-          <Links>Home</Links>
+          <Link to="/" style={{ textDecoration: "none", color: "black" }}>
+            <Links>Home</Links>
+          </Link>
+
           <Links>Artwork</Links>
+
           <Links>Exhibition</Links>
           <Links>Competition</Links>
         </Center>

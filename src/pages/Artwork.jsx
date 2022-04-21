@@ -1,7 +1,11 @@
 import { Add, Remove } from "@material-ui/icons";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import styled from "styled-components";
 import Footer from "../Components/Footer";
 import Navbar from "../Components/Navbar";
+import { publicRequest } from "../requestMethods";
 import { mobile } from "../responsive";
 
 const Container = styled.div``;
@@ -18,7 +22,7 @@ const ImgContainer = styled.div`
 
 const Image = styled.img`
   width: 100%;
-  height: 90vh;
+  height: 80vh;
   object-fit: cover;
   ${mobile({ height: "40vh" })}
 `;
@@ -111,42 +115,55 @@ const Button = styled.button`
     background-color: #f8f4f4;
   }
 `;
-const Product = () => {
+const Artwork = () => {
+  const location = useLocation();
+  const id = location.pathname.split("/")[2];
+  const [artwork, setArtwork] = useState({});
+  const [quantity, setQuantity] = useState(1);
+
+  const handleQuantity = (type) => {
+    if (type === "dec") {
+      quantity > 1 && setQuantity(quantity - 1);
+    } else {
+      setQuantity(quantity + 1);
+    }
+  };
+
+  useEffect(() => {
+    const getArtwork = async () => {
+      try {
+        const res = await axios.get(
+          `http://localhost:5000/api/artworks/find/${id}`
+        );
+        //console.log(...res.data);
+        setArtwork(...res.data);
+      } catch {}
+    };
+    getArtwork();
+  }, [id]);
+
   return (
     <Container>
       <Navbar />
 
       <Wrapper>
         <ImgContainer>
-          <Image src="https://images.pexels.com/photos/1081685/pexels-photo-1081685.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" />
+          <Image src={artwork.img} />
         </ImgContainer>
         <InfoContainer>
-          <Title>Thinker</Title>
-          <Desc>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec
-            venenatis, dolor in finibus malesuada, lectus ipsum porta nunc, at
-            iaculis arcu nisi sed mauris. Nulla fermentum vestibulum ex, eget
-            tristique tortor pretium ut. Curabitur elit justo, consequat id
-            condimentum ac, volutpat ornare.
-          </Desc>
-          <Price>$ 20</Price>
+          <Title>{artwork.title}</Title>
+          <Desc>{artwork.art_description}</Desc>
+          <Price>₹ {artwork.price}</Price>
           <FilterContainer>
             <Filter>
-              <FilterTitle>Size</FilterTitle>
-              <FilterSize>
-                <FilterSizeOption>XS</FilterSizeOption>
-                <FilterSizeOption>S</FilterSizeOption>
-                <FilterSizeOption>M</FilterSizeOption>
-                <FilterSizeOption>L</FilterSizeOption>
-                <FilterSizeOption>XL</FilterSizeOption>
-              </FilterSize>
+              <FilterTitle>Size: {artwork.size}</FilterTitle>
             </Filter>
           </FilterContainer>
           <AddContainer>
             <AmountContainer>
-              <Remove />
-              <Amount>1</Amount>
-              <Add />
+              <Remove onClick={() => handleQuantity("dec")} />
+              <Amount>{quantity}</Amount>
+              <Add onClick={() => handleQuantity("inc")} />
             </AmountContainer>
             <Button>ADD TO CART</Button>
           </AddContainer>
@@ -158,4 +175,4 @@ const Product = () => {
   );
 };
 
-export default Product;
+export default Artwork;
