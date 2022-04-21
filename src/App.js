@@ -35,11 +35,6 @@ function App() {
           />
         </Routes>
       </Router>
-      {/* 
-     
-      
-      
-       */}
     </>
   );
 }
