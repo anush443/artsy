@@ -13,9 +13,11 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
+import Exhibition from "./pages/Exhibition";
 
 function App() {
   const user = true;
+
   return (
     <>
       <Router>
@@ -24,6 +26,7 @@ function App() {
           <Route path="/artworks/:category" element={<ArtworkList />} />
           <Route path="/artwork/:id" element={<Artwork />} />
           <Route path="/cart" element={<Cart />} />
+          <Route path="/Exhibition" element={<Exhibition />} />
 
           <Route
             path="/login"

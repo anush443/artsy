@@ -52,7 +52,7 @@ export const categories = [
     id: 5,
     img: "/Assests/categories/everyday life.jpg",
     title: "Everyday Life_img",
-    cat: "everydaylife",
+    cat: "abstract",
   },
   {
     id: 6,

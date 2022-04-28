@@ -20,7 +20,7 @@ const ProductCard = ({ item }) => {
           <div class="artwork-details">
             <div class="artwork-name">
               <h1 class="text-center"> {item.title}</h1>
-              <h2 class="text-center">By {item.artistname}</h2>
+              <h2 class="text-center">By {item.artist_name}</h2>
               <h2 class="text-center">₹ {item.price}</h2>
 
               <div class="icon">

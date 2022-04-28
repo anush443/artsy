@@ -42,7 +42,7 @@ const ProductList = () => {
   const location = useLocation();
   const cat = location.pathname.split("/")[2];
   const [filters, setFilter] = useState({});
-  const [sort, setSort] = useState("newest");
+  const [sort, setSort] = useState("");
 
   const handleFilters = (e) => {
     const value = e.target.value;
@@ -60,7 +60,7 @@ const ProductList = () => {
           <FilterText>Filter Products:</FilterText>
 
           <Select name="size" onChange={handleFilters}>
-            <Option>Size in cm</Option>
+            <Option value="">Size in cm</Option>
             <Option>100*120</Option>
             <Option>100*150</Option>
             <Option>120*120</Option>
@@ -72,7 +72,7 @@ const ProductList = () => {
           <FilterText>Show</FilterText>
           <Select onChange={(e) => setSort(e.target.value)}>
             {/* <Option value="newest">Newest</Option> */}
-            <Option> By Price</Option>
+            <Option value=""> By Price</Option>
             <Option value="asc">Low to High</Option>
             <Option value="desc">High to Low</Option>
           </Select>

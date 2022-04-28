@@ -1,10 +1,12 @@
 import { Add, Remove } from "@material-ui/icons";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import { useLocation } from "react-router-dom";
 import styled from "styled-components";
 import Footer from "../Components/Footer";
 import Navbar from "../Components/Navbar";
+import { addArtwork } from "../redux/cartRedux";
 import { publicRequest } from "../requestMethods";
 import { mobile } from "../responsive";
 
@@ -120,6 +122,7 @@ const Artwork = () => {
   const id = location.pathname.split("/")[2];
   const [artwork, setArtwork] = useState({});
   const [quantity, setQuantity] = useState(1);
+  const dispatch = useDispatch();
 
   const handleQuantity = (type) => {
     if (type === "dec") {
@@ -135,12 +138,16 @@ const Artwork = () => {
         const res = await axios.get(
           `http://localhost:5000/api/artworks/find/${id}`
         );
-        //console.log(...res.data);
+
         setArtwork(...res.data);
       } catch {}
     };
     getArtwork();
   }, [id]);
+
+  const handleClick = () => {
+    dispatch(addArtwork({ ...artwork, quantity }));
+  };
 
   return (
     <Container>
@@ -151,8 +158,12 @@ const Artwork = () => {
           <Image src={artwork.img} />
         </ImgContainer>
         <InfoContainer>
-          <Title>{artwork.title}</Title>
+          <Title>
+            {artwork.title} by {artwork.artist_name}{" "}
+          </Title>
+          <Desc></Desc>
           <Desc>{artwork.art_description}</Desc>
+          <Price></Price>
           <Price>₹ {artwork.price}</Price>
           <FilterContainer>
             <Filter>
@@ -165,7 +176,7 @@ const Artwork = () => {
               <Amount>{quantity}</Amount>
               <Add onClick={() => handleQuantity("inc")} />
             </AmountContainer>
-            <Button>ADD TO CART</Button>
+            <Button onClick={handleClick}>ADD TO CART</Button>
           </AddContainer>
         </InfoContainer>
       </Wrapper>

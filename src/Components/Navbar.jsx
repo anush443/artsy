@@ -3,8 +3,9 @@ import React from "react";
 import styled from "styled-components";
 import Badge from "@mui/material/Badge";
 import { mobile } from "../responsive";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import Categories from "./Categories";
+import { useSelector } from "react-redux";
 
 const Container = styled.div`
   height: 60px;
@@ -59,6 +60,9 @@ const MenuItem = styled.div`
 `;
 
 const Navbar = () => {
+  const quantity = useSelector((state) => state.cart.quantity);
+  console.log(quantity);
+
   return (
     <Container>
       <Wrapper>
@@ -72,18 +76,24 @@ const Navbar = () => {
 
           <Links>Artwork</Links>
 
-          <Links>Exhibition</Links>
+          <Link
+            to="/Exhibition"
+            style={{ textDecoration: "none", color: "black" }}
+          >
+            <Links>Exhibition</Links>
+          </Link>
           <Links>Competition</Links>
         </Center>
         <Right>
           <MenuItem>SignIn</MenuItem>
           <MenuItem>Register</MenuItem>
-
-          <MenuItem>
-            <Badge badgeContent={4} color="primary">
-              <ShoppingCartOutlined />
-            </Badge>
-          </MenuItem>
+          <Link to="/cart">
+            <MenuItem>
+              <Badge badgeContent={quantity} color="primary">
+                <ShoppingCartOutlined />
+              </Badge>
+            </MenuItem>
+          </Link>
         </Right>
       </Wrapper>
     </Container>

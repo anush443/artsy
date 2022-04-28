@@ -1,6 +1,6 @@
 .artwork {
   width: 100%;
-  background-color: black;
+  background-color: #212529;
   margin: 10px auto;
   display: block;
 
@@ -24,7 +24,7 @@
   height: 100%;
 }
 .artwork-name {
-  color: #fff;
+  color: #fafafa;
   font-weight: bold;
   padding: 3px;
 }
@@ -34,7 +34,7 @@
 .artwork-name h2 {
   font-size: 15px;
 
-  color: yellow;
+  color: #fafafa;
   padding: 0px;
 }
 .icon {
