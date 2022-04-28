@@ -1,16 +1,18 @@
 import { Add, Remove } from "@material-ui/icons";
-import { useDispatch, useSelector } from "react-redux";
 
 import styled from "styled-components";
-import { addArtwork } from "../redux/cartRedux";
+
 import Footer from "../Components/Footer";
 import Navbar from "../Components/Navbar";
 import { mobile } from "../responsive";
+import { useContext } from "react";
+import CartContext from "../Store/cart-context";
 
 const Container = styled.div``;
 
 const Wrapper = styled.div`
   padding: 20px;
+
   ${mobile({ padding: "10px" })}
 `;
 
@@ -59,6 +61,7 @@ const Product = styled.div`
   display: flex;
   padding: 20px;
   justify-content: space-between;
+
   ${mobile({ flexDirection: "column" })}
 `;
 
@@ -156,12 +159,16 @@ const Button = styled.button`
 `;
 
 const Cart = () => {
-  const cart = useSelector((state) => state.cart);
-  const dispatch = useDispatch();
-  console.log(cart);
+  const cartCtx = useContext(CartContext);
 
-  const handleQuantity = (e) => {
-    console.log(e.target.name);
+  const totalAmount = cartCtx.totalAmount;
+
+  const removeCartItem = (id) => {
+    cartCtx.removeItem(id);
+  };
+
+  const addCartItem = (item) => {
+    cartCtx.addItem({ ...item, amount: 1 });
   };
 
   return (
@@ -176,51 +183,55 @@ const Cart = () => {
             <TopText>Shopping Bag(2)</TopText>
             <TopText>Your Wishlist (0)</TopText>
           </TopTexts>
-          <TopButton type="filled">CHECKOUT NOW</TopButton>
+          {cartCtx.items.length > 0 && (
+            <TopButton type="filled">CHECKOUT NOW</TopButton>
+          )}
         </Top>
         <Bottom>
           <Info>
-            {cart.artworks.map((artwork) => (
+            {cartCtx.items.map((item) => (
               <Product>
                 <ProductDetail>
-                  <Image src={artwork.img} />
+                  <Image src={item.img} />
                   <Details>
                     <ProductName>
-                      <b>Artwork:</b> {artwork.title}
+                      <b>Artwork:</b> {item.title}
                     </ProductName>
-                    <ProductId>
-                      <b>ID:</b> {artwork.id}
-                    </ProductId>
+                    <ProductName>
+                      <b>Artist:</b> {item.artist_name}
+                    </ProductName>
 
+                    <ProductId>
+                      <b>ID:</b> {item.id}
+                    </ProductId>
                     <ProductSize>
-                      <b>Size:</b> {artwork.size}
+                      <b>Size:</b> {item.size}
                     </ProductSize>
                   </Details>
                 </ProductDetail>
                 <PriceDetail>
                   <ProductAmountContainer>
-                    <Remove />
-                    <ProductAmount>{artwork.quantity}</ProductAmount>
-                    <Add />
+                    <Remove onClick={() => removeCartItem(item.id)} />
+                    <ProductAmount>{item.amount}</ProductAmount>
+                    <Add onClick={() => addCartItem(item)} />
                   </ProductAmountContainer>
-                  <ProductPrice>
-                    ₹{artwork.price * artwork.quantity}
-                  </ProductPrice>
+                  <ProductPrice>₹{item.price * item.amount}</ProductPrice>
                 </PriceDetail>
               </Product>
             ))}
+
             <Hr />
           </Info>
           <Summary>
             <SummaryTitle>ORDER SUMMARY</SummaryTitle>
             <SummaryItem>
-              {cart.total}
+              {totalAmount}
               <SummaryItemText>Subtotal</SummaryItemText>
               <SummaryItemPrice></SummaryItemPrice>
             </SummaryItem>
             <SummaryItem>
               <SummaryItemText>Estimated Shipping</SummaryItemText>
-              <SummaryItemPrice>₹{cart.total}0</SummaryItemPrice>
+              <SummaryItemPrice>₹00</SummaryItemPrice>
             </SummaryItem>
             <SummaryItem>
               <SummaryItemText>Shipping Discount</SummaryItemText>
@@ -228,9 +239,9 @@ const Cart = () => {
             </SummaryItem>
             <SummaryItem type="total">
               <SummaryItemText>Total</SummaryItemText>
-              <SummaryItemPrice>₹{cart.total}</SummaryItemPrice>
+              <SummaryItemPrice>₹{totalAmount}</SummaryItemPrice>
             </SummaryItem>
-            <Button>CHECKOUT NOW</Button>
+            {cartCtx.items.length > 0 && <Button>CHECKOUT NOW</Button>}
           </Summary>
         </Bottom>
       </Wrapper>

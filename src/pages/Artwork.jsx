@@ -1,14 +1,14 @@
 import { Add, Remove } from "@material-ui/icons";
 import axios from "axios";
-import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useEffect, useState, useContext } from "react";
+
 import { useLocation } from "react-router-dom";
 import styled from "styled-components";
 import Footer from "../Components/Footer";
 import Navbar from "../Components/Navbar";
-import { addArtwork } from "../redux/cartRedux";
-import { publicRequest } from "../requestMethods";
+
 import { mobile } from "../responsive";
+import CartContext from "../Store/cart-context";
 
 const Container = styled.div``;
 
@@ -122,7 +122,8 @@ const Artwork = () => {
   const id = location.pathname.split("/")[2];
   const [artwork, setArtwork] = useState({});
   const [quantity, setQuantity] = useState(1);
-  const dispatch = useDispatch();
+  const cartCtx = useContext(CartContext);
+  //const dispatch = useDispatch();
 
   const handleQuantity = (type) => {
     if (type === "dec") {
@@ -130,6 +131,25 @@ const Artwork = () => {
     } else {
       setQuantity(quantity + 1);
     }
+  };
+
+  const handleClick = (artwork) => {
+    const item = artwork.artwork;
+    //console.log(item);
+
+    const addToCartHandler = (quantity, item) => {
+      cartCtx.addItem({
+        id: item.id,
+        artist_name: item.artist_name,
+        category: item.category,
+        price: item.price,
+        title: item.title,
+        amount: quantity,
+        img: item.img,
+        size: item.size,
+      });
+    };
+    addToCartHandler(quantity, item);
   };
 
   useEffect(() => {
@@ -145,9 +165,9 @@ const Artwork = () => {
     getArtwork();
   }, [id]);
 
-  const handleClick = () => {
-    dispatch(addArtwork({ ...artwork, quantity }));
-  };
+  // const handleClick = () => {
+  //   dispatch(addArtwork({ ...artwork, quantity }));
+  // };
 
   return (
     <Container>
@@ -176,7 +196,9 @@ const Artwork = () => {
               <Amount>{quantity}</Amount>
               <Add onClick={() => handleQuantity("inc")} />
             </AmountContainer>
-            <Button onClick={handleClick}>ADD TO CART</Button>
+            <Button onClick={() => handleClick({ artwork })}>
+              ADD TO CART
+            </Button>
           </AddContainer>
         </InfoContainer>
       </Wrapper>

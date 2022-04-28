@@ -1,10 +1,11 @@
 import { ShoppingCartOutlined } from "@material-ui/icons";
-import React from "react";
+import React, { useContext } from "react";
 import styled from "styled-components";
 import Badge from "@mui/material/Badge";
 import { mobile } from "../responsive";
 import { Link, NavLink } from "react-router-dom";
 import Categories from "./Categories";
+import CartContext from "../Store/cart-context";
 import { useSelector } from "react-redux";
 
 const Container = styled.div`
@@ -60,8 +61,13 @@ const MenuItem = styled.div`
 `;
 
 const Navbar = () => {
-  const quantity = useSelector((state) => state.cart.quantity);
-  console.log(quantity);
+  const cartCtx = useContext(CartContext);
+
+  const numberOfCartItems = cartCtx.items.reduce((curNumber, item) => {
+    return curNumber + item.amount;
+  }, 0);
+
+  // const quantity = useSelector((state) => state.cart.quantity);
 
   return (
     <Container>
@@ -87,9 +93,9 @@ const Navbar = () => {
         <Right>
           <MenuItem>SignIn</MenuItem>
           <MenuItem>Register</MenuItem>
-          <Link to="/cart">
+          <Link to="/cart" style={{ textDecoration: "none", color: "black" }}>
             <MenuItem>
-              <Badge badgeContent={quantity} color="primary">
+              <Badge badgeContent={numberOfCartItems} color="primary">
                 <ShoppingCartOutlined />
               </Badge>
             </MenuItem>

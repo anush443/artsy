@@ -6,6 +6,7 @@ import Artwork from "./pages/Artwork";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Cart from "./pages/Cart";
+import CartProvider from "./Store/cartProvider";
 
 import {
   BrowserRouter as Router,
@@ -19,7 +20,7 @@ function App() {
   const user = true;
 
   return (
-    <>
+    <CartProvider>
       <Router>
         <Routes>
           <Route path="/" element={<Home />} />
@@ -38,7 +39,7 @@ function App() {
           />
         </Routes>
       </Router>
-    </>
+    </CartProvider>
   );
 }
 
