@@ -91,7 +91,10 @@ const Navbar = () => {
           <Links>Competition</Links>
         </Center>
         <Right>
-          <MenuItem>SignIn</MenuItem>
+          <Link to="/login" style={{ textDecoration: "none", color: "black" }}>
+            <MenuItem>SignIn</MenuItem>
+          </Link>
+
           <MenuItem>Register</MenuItem>
           <Link to="/cart" style={{ textDecoration: "none", color: "black" }}>
             <MenuItem>

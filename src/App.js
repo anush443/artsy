@@ -15,9 +15,10 @@ import {
   Navigate,
 } from "react-router-dom";
 import Exhibition from "./pages/Exhibition";
+import { useSelector } from "react-redux";
 
 function App() {
-  const user = true;
+  const user = useSelector((state) => state.user.currentUser);
 
   return (
     <CartProvider>
