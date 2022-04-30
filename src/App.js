@@ -6,6 +6,7 @@ import Artwork from "./pages/Artwork";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Cart from "./pages/Cart";
+
 import CartProvider from "./Store/cartProvider";
 
 import {
@@ -15,10 +16,11 @@ import {
   Navigate,
 } from "react-router-dom";
 import Exhibition from "./pages/Exhibition";
-import { useSelector } from "react-redux";
+import Profile from "./pages/Profile";
+//import { useSelector } from "react-redux";
 
 function App() {
-  const user = useSelector((state) => state.user.currentUser);
+  const user = false;
 
   return (
     <CartProvider>
@@ -38,6 +40,7 @@ function App() {
             path="/register"
             element={user ? <Navigate to="/" /> : <Register />}
           />
+          <Route path="/profile" element={<Profile />} />
         </Routes>
       </Router>
     </CartProvider>

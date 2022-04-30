@@ -1,4 +1,7 @@
-import { ShoppingCartOutlined } from "@material-ui/icons";
+import {
+  AccountCircleOutlined,
+  ShoppingCartOutlined,
+} from "@material-ui/icons";
 import React, { useContext } from "react";
 import styled from "styled-components";
 import Badge from "@mui/material/Badge";
@@ -6,7 +9,7 @@ import { mobile } from "../responsive";
 import { Link, NavLink } from "react-router-dom";
 import Categories from "./Categories";
 import CartContext from "../Store/cart-context";
-import { useSelector } from "react-redux";
+import AuthContext from "../Store/auth-context";
 
 const Container = styled.div`
   height: 60px;
@@ -62,6 +65,9 @@ const MenuItem = styled.div`
 
 const Navbar = () => {
   const cartCtx = useContext(CartContext);
+  const authCtx = useContext(AuthContext);
+
+  const isLoggedIn = authCtx.isLoggedIn;
 
   const numberOfCartItems = cartCtx.items.reduce((curNumber, item) => {
     return curNumber + item.amount;
@@ -91,11 +97,23 @@ const Navbar = () => {
           <Links>Competition</Links>
         </Center>
         <Right>
-          <Link to="/login" style={{ textDecoration: "none", color: "black" }}>
-            <MenuItem>SignIn</MenuItem>
-          </Link>
+          {!isLoggedIn && (
+            <Link
+              to="/login"
+              style={{ textDecoration: "none", color: "black" }}
+            >
+              <MenuItem>SignIn</MenuItem>
+            </Link>
+          )}
+          {!isLoggedIn && (
+            <Link
+              to="/register"
+              style={{ textDecoration: "none", color: "black" }}
+            >
+              <MenuItem>Register</MenuItem>
+            </Link>
+          )}
 
-          <MenuItem>Register</MenuItem>
           <Link to="/cart" style={{ textDecoration: "none", color: "black" }}>
             <MenuItem>
               <Badge badgeContent={numberOfCartItems} color="primary">
@@ -103,6 +121,22 @@ const Navbar = () => {
               </Badge>
             </MenuItem>
           </Link>
+          {isLoggedIn && (
+            <Link
+              to="/profile"
+              style={{ textDecoration: "none", color: "black" }}
+            >
+              <MenuItem>
+                Hi Anush
+                <AccountCircleOutlined />
+              </MenuItem>
+            </Link>
+          )}
+          {isLoggedIn && (
+            <Link to="/" style={{ textDecoration: "none", color: "black" }}>
+              <MenuItem>Log out</MenuItem>
+            </Link>
+          )}
         </Right>
       </Wrapper>
     </Container>

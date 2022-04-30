@@ -1,8 +1,11 @@
-import { useState } from "react";
+import axios from "axios";
+import { useContext, useEffect, useRef, useState } from "react";
+import { Link, Navigate } from "react-router-dom";
 import styled from "styled-components";
 import { mobile } from "../responsive";
-import { login } from "../redux/apiCalls";
-import { useDispatch, useSelector } from "react-redux";
+import AuthContext from "../Store/auth-context";
+//import { login } from "../redux/apiCalls";
+//import { useDispatch, useSelector } from "react-redux";
 
 const Container = styled.div`
   width: 100vw;
@@ -52,12 +55,12 @@ const Button = styled.button`
   cursor: pointer;
   margin-bottom: 10px;
   &:disabled {
-    color: grey;
+    background-color: grey;
     cursor: not-allowed;
   }
 `;
 
-const Link = styled.a`
+const Span = styled.span`
   margin: 5px 0px;
   font-size: 12px;
   text-decoration: underline;
@@ -69,35 +72,88 @@ const Error = styled.span`
 `;
 
 const Login = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const dispatch = useDispatch();
-  const { isFetching, error } = useSelector((state) => state.user);
+  const [submitBtn, setSubmitBtn] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [errMsg, setErrorMsg] = useState();
+  const emailInputRef = useRef();
+  const passwordInputRef = useRef();
 
-  const handleClick = (e) => {
+  const authCtx = useContext(AuthContext);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setErrorMsg(""); // count is 0 here
+    }, 10000);
+    // Update count to be 5 after timeout is scheduled
+  }, [errMsg]);
+
+  const validatePasswordAndEmail = () => {
+    if (
+      passwordInputRef.current.value.length >= 3 &&
+      passwordInputRef.current.value.length <= 12 &&
+      emailInputRef.current.value.length > 5
+    ) {
+      setSubmitBtn(true);
+    } else {
+      setSubmitBtn(false);
+    }
+  };
+
+  const handleSubmit = (e) => {
     e.preventDefault();
-    login(dispatch, { email, password });
+
+    const email = emailInputRef.current.value;
+    const password = passwordInputRef.current.value;
+
+    setIsLoading(true);
+
+    axios
+      .post("http://localhost:5000/api/auth/login", {
+        email: email,
+        password: password,
+      })
+      .then((res) => {
+        setIsLoading(false);
+        if (res.data.message === "please register first") {
+          setErrorMsg(res.data.message);
+        } else if (res.data.message === "Incorrect Password") {
+          setErrorMsg(res.data.message);
+        } else {
+          //console.log(res.data);
+          authCtx.login(res.data.accessToken, res.data.id);
+        }
+      })
+      .catch((err) => {
+        setIsLoading(false);
+        setErrorMsg("Login Failed.....");
+      });
   };
   return (
     <Container>
       <Wrapper>
         <Title>SIGN IN</Title>
-        <Form>
+        <Form onSubmit={handleSubmit}>
           <Input
             placeholder="email"
-            onChange={(e) => setEmail(e.target.value)}
+            ref={emailInputRef}
+            onChange={validatePasswordAndEmail}
           />
           <Input
             placeholder="password"
             type="password"
-            onChange={(e) => setPassword(e.target.value)}
+            ref={passwordInputRef}
+            onChange={validatePasswordAndEmail}
           />
-          <Button onClick={handleClick} disabled={isFetching}>
-            LOGIN
-          </Button>
-          {error && <Error>Incorrect Creditails</Error>}
-          <Link>DO NOT YOU REMEMBER THE PASSWORD?</Link>
-          <Link>CREATE A NEW ACCOUNT</Link>
+          {!isLoading && (
+            <Button disabled={!submitBtn ? true : false}>LOGIN</Button>
+          )}
+          {isLoading && <span>Signing In....</span>}
+          <Span>DO NOT YOU REMEMBER THE PASSWORD?</Span>
+          <Link to="/register">
+            <Span>CREATE A NEW ACCOUNT</Span>
+          </Link>
+          {errMsg}
+          {authCtx.isLoggedIn && <Navigate to="/" />}
         </Form>
       </Wrapper>
     </Container>
