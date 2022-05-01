@@ -6,8 +6,8 @@ import React, { useContext } from "react";
 import styled from "styled-components";
 import Badge from "@mui/material/Badge";
 import { mobile } from "../responsive";
-import { Link, NavLink } from "react-router-dom";
-import Categories from "./Categories";
+import { Link } from "react-router-dom";
+
 import CartContext from "../Store/cart-context";
 import AuthContext from "../Store/auth-context";
 
@@ -73,7 +73,9 @@ const Navbar = () => {
     return curNumber + item.amount;
   }, 0);
 
-  // const quantity = useSelector((state) => state.cart.quantity);
+  const handleLogout = () => {
+    authCtx.logout();
+  };
 
   return (
     <Container>
@@ -127,14 +129,14 @@ const Navbar = () => {
               style={{ textDecoration: "none", color: "black" }}
             >
               <MenuItem>
-                Hi Anush
+                Hi {authCtx.id}
                 <AccountCircleOutlined />
               </MenuItem>
             </Link>
           )}
           {isLoggedIn && (
             <Link to="/" style={{ textDecoration: "none", color: "black" }}>
-              <MenuItem>Log out</MenuItem>
+              <MenuItem onClick={handleLogout}>Log out</MenuItem>
             </Link>
           )}
         </Right>

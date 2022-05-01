@@ -1,9 +1,8 @@
 import axios from "axios";
 import { useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { mobile } from "../responsive";
-import { Navigate } from "react-router-dom";
 
 const Container = styled.div`
   width: 100vw;
@@ -68,11 +67,11 @@ const Register = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const [errMsg, setErrorMsg] = useState("");
-  const [nav, setNav] = useState(false);
 
   const emailInputRef = useRef();
   const passInputRef = useRef();
   const confirmPassInputRef = useRef();
+  const navigate = useNavigate();
 
   useEffect(() => {
     setTimeout(() => {
@@ -105,7 +104,7 @@ const Register = () => {
       .then((res) => {
         setIsLoading(false);
         if (res.data.message === "Successfully Registered new user") {
-          setNav(true);
+          navigate("/login");
         } else {
           setErrorMsg("User Already Registered. Please Login.");
         }
@@ -143,7 +142,6 @@ const Register = () => {
           )}
           {isLoading && <p>Regestering ....</p>}
           {errMsg}
-          {nav && <Navigate to="/login" />}
         </Form>
       </Wrapper>
     </Container>

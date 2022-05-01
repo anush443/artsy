@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { mobile } from "../responsive";
 import AuthContext from "../Store/auth-context";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const Container = styled.div`
   display: flex;
@@ -46,7 +47,7 @@ const Button = styled.button`
     cursor: not-allowed;
   }
 `;
-const msg = styled.h2`
+const Msg = styled.h2`
   margin: 5px 0px;
   font-size: 12px;
 `;
@@ -54,12 +55,13 @@ const msg = styled.h2`
 const Profile = () => {
   const [submitBtn, setSubmitBtn] = useState(false);
   const [msg, setMsg] = useState(false);
-  const oldPassInputRef = useRef();
+
   const passInputRef = useRef();
   const confirmPassInputRef = useRef();
   const authCtx = useContext(AuthContext);
   const token = authCtx.token;
   const id = authCtx.id;
+  const navigate = useNavigate();
 
   useEffect(() => {
     setTimeout(() => {
@@ -98,6 +100,7 @@ const Profile = () => {
       )
       .then((res) => {
         setMsg(res.data);
+        navigate("/");
       })
       .catch((err) => {
         setMsg("Please Try Again");
@@ -133,7 +136,7 @@ const Profile = () => {
             />
             <Button disabled={!submitBtn ? true : false}> Confirm </Button>
           </Form>
-          {msg}
+          <Msg>{msg}</Msg>
         </Wrapper>
       </Container>
     </>

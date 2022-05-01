@@ -6,8 +6,8 @@ import Artwork from "./pages/Artwork";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Cart from "./pages/Cart";
-
 import CartProvider from "./Store/cartProvider";
+import AuthContext from "./Store/auth-context";
 
 import {
   BrowserRouter as Router,
@@ -17,10 +17,11 @@ import {
 } from "react-router-dom";
 import Exhibition from "./pages/Exhibition";
 import Profile from "./pages/Profile";
+import { useContext } from "react";
 //import { useSelector } from "react-redux";
 
 function App() {
-  const user = false;
+  const authCtx = useContext(AuthContext);
 
   return (
     <CartProvider>
@@ -31,16 +32,22 @@ function App() {
           <Route path="/artwork/:id" element={<Artwork />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/Exhibition" element={<Exhibition />} />
+          {!authCtx.isLoggedIn && <Route path="/login" element={<Login />} />}
+          {!authCtx.isLoggedIn && (
+            <Route path="/register" element={<Register />} />
+          )}
 
           <Route
-            path="/login"
-            element={user ? <Navigate to="/" /> : <Login />}
+            path="/profile"
+            element={
+              authCtx.isLoggedIn ? (
+                <Profile />
+              ) : (
+                <Navigate to="/login" replace />
+              )
+            }
           />
-          <Route
-            path="/register"
-            element={user ? <Navigate to="/" /> : <Register />}
-          />
-          <Route path="/profile" element={<Profile />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </Router>
     </CartProvider>

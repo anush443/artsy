@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useContext, useEffect, useRef, useState } from "react";
-import { Link, Navigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { mobile } from "../responsive";
 import AuthContext from "../Store/auth-context";
@@ -79,6 +79,7 @@ const Login = () => {
   const passwordInputRef = useRef();
 
   const authCtx = useContext(AuthContext);
+  const navigate = useNavigate();
 
   useEffect(() => {
     setTimeout(() => {
@@ -119,8 +120,17 @@ const Login = () => {
         } else if (res.data.message === "Incorrect Password") {
           setErrorMsg(res.data.message);
         } else {
-          //console.log(res.data);
-          authCtx.login(res.data.accessToken, res.data.id);
+          //console.log(res.data.expiresIn);
+          const expirationTime = new Date(
+            new Date().getTime() + +res.data.expiresIn * 1000
+          );
+          console.log(expirationTime);
+          authCtx.login(
+            res.data.accessToken,
+            res.data.id,
+            expirationTime.toISOString()
+          );
+          navigate("/");
         }
       })
       .catch((err) => {
@@ -153,7 +163,6 @@ const Login = () => {
             <Span>CREATE A NEW ACCOUNT</Span>
           </Link>
           {errMsg}
-          {authCtx.isLoggedIn && <Navigate to="/" />}
         </Form>
       </Wrapper>
     </Container>
