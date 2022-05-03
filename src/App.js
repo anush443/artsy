@@ -18,6 +18,7 @@ import {
 import Exhibition from "./pages/Exhibition";
 import Profile from "./pages/Profile";
 import { useContext } from "react";
+import Admin from "./pages/Admin";
 //import { useSelector } from "react-redux";
 
 function App() {
@@ -40,11 +41,17 @@ function App() {
           <Route
             path="/profile"
             element={
-              authCtx.isLoggedIn ? (
+              authCtx.isLoggedIn && !authCtx.isAdmin ? (
                 <Profile />
               ) : (
                 <Navigate to="/login" replace />
               )
+            }
+          />
+          <Route
+            path="/admin"
+            element={
+              authCtx.isAdmin ? <Admin /> : <Navigate to="/login" replace />
             }
           />
           <Route path="*" element={<Navigate to="/" replace />} />

@@ -4,8 +4,9 @@ import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { mobile } from "../responsive";
 import AuthContext from "../Store/auth-context";
-//import { login } from "../redux/apiCalls";
-//import { useDispatch, useSelector } from "react-redux";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
 
 const Container = styled.div`
   width: 100vw;
@@ -71,12 +72,17 @@ const Error = styled.span`
   color: red;
 `;
 
+const schema = yup.object().shape({
+  email: yup.string().email().required("Email is required"),
+  password: yup.string().min(4).max(15).required(),
+});
 const Login = () => {
-  const [submitBtn, setSubmitBtn] = useState(false);
+  const { register, handleSubmit, errors } = useForm({
+    resolver: yupResolver(schema),
+  });
+
   const [isLoading, setIsLoading] = useState(false);
   const [errMsg, setErrorMsg] = useState();
-  const emailInputRef = useRef();
-  const passwordInputRef = useRef();
 
   const authCtx = useContext(AuthContext);
   const navigate = useNavigate();
@@ -88,31 +94,11 @@ const Login = () => {
     // Update count to be 5 after timeout is scheduled
   }, [errMsg]);
 
-  const validatePasswordAndEmail = () => {
-    if (
-      passwordInputRef.current.value.length >= 3 &&
-      passwordInputRef.current.value.length <= 12 &&
-      emailInputRef.current.value.length > 5
-    ) {
-      setSubmitBtn(true);
-    } else {
-      setSubmitBtn(false);
-    }
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    const email = emailInputRef.current.value;
-    const password = passwordInputRef.current.value;
-
+  const submitForm = (data) => {
+    //console.log(data);
     setIsLoading(true);
-
     axios
-      .post("http://localhost:5000/api/auth/login", {
-        email: email,
-        password: password,
-      })
+      .post("http://localhost:5000/api/auth/login", data)
       .then((res) => {
         setIsLoading(false);
         if (res.data.message === "please register first") {
@@ -121,13 +107,17 @@ const Login = () => {
           setErrorMsg(res.data.message);
         } else {
           //console.log(res.data.expiresIn);
+          console.log(res.data.isAdmin);
           const expirationTime = new Date(
             new Date().getTime() + +res.data.expiresIn * 1000
           );
-          console.log(expirationTime);
+          // console.log(expirationTime);
           authCtx.login(
             res.data.accessToken,
             res.data.id,
+            res.data.email,
+            res.data.username,
+            res.data.isAdmin,
             expirationTime.toISOString()
           );
           navigate("/");
@@ -142,23 +132,19 @@ const Login = () => {
     <Container>
       <Wrapper>
         <Title>SIGN IN</Title>
-        <Form onSubmit={handleSubmit}>
+        <Form onSubmit={handleSubmit(submitForm)}>
+          <Input type="text" name="email" placeholder="email" ref={register} />
+          {errors.email?.message}
           <Input
-            placeholder="email"
-            ref={emailInputRef}
-            onChange={validatePasswordAndEmail}
-          />
-          <Input
-            placeholder="password"
             type="password"
-            ref={passwordInputRef}
-            onChange={validatePasswordAndEmail}
+            name="password"
+            placeholder="password"
+            ref={register}
           />
-          {!isLoading && (
-            <Button disabled={!submitBtn ? true : false}>LOGIN</Button>
-          )}
+          {errors.password?.message}
+          {!isLoading && <Button>LOGIN</Button>}
           {isLoading && <span>Signing In....</span>}
-          <Span>DO NOT YOU REMEMBER THE PASSWORD?</Span>
+          {/* <Span>DO NOT YOU REMEMBER THE PASSWORD?</Span> */}
           <Link to="/register">
             <Span>CREATE A NEW ACCOUNT</Span>
           </Link>

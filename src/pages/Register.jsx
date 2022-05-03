@@ -3,6 +3,9 @@ import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { mobile } from "../responsive";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
 
 const Container = styled.div`
   width: 100vw;
@@ -62,15 +65,21 @@ const Button = styled.button`
   }
 `;
 
-const Register = () => {
-  const [submitBtn, setSubmitBtn] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+const schema = yup.object().shape({
+  email: yup.string().email().required("Email is required"),
+  userName: yup.string().min(4).max(8).required(),
+  password: yup.string().min(4).max(15).required(),
+  confirmPassword: yup.string().oneOf([yup.ref("password"), null]),
+});
 
+const Register = () => {
+  const { register, handleSubmit, errors } = useForm({
+    resolver: yupResolver(schema),
+  });
+
+  const [isLoading, setIsLoading] = useState(false);
   const [errMsg, setErrorMsg] = useState("");
 
-  const emailInputRef = useRef();
-  const passInputRef = useRef();
-  const confirmPassInputRef = useRef();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -80,27 +89,13 @@ const Register = () => {
     // Update count to be 5 after timeout is scheduled
   }, [errMsg]);
 
-  const confirmPass = () => {
-    if (passInputRef.current.value === confirmPassInputRef.current.value) {
-      setSubmitBtn(true);
-    } else {
-      setSubmitBtn(false);
-    }
-  };
-
-  const submitHandler = (e) => {
-    e.preventDefault();
-
-    const email = emailInputRef.current.value;
-    const password = passInputRef.current.value;
+  const submitForm = (data) => {
+    const { confirmPassword, ...formInputs } = data;
+    //console.log(formInputs);
 
     setIsLoading(true);
-
     axios
-      .post("http://localhost:5000/api/auth/register", {
-        email: email,
-        password: password,
-      })
+      .post("http://localhost:5000/api/auth/register", formInputs)
       .then((res) => {
         setIsLoading(false);
         if (res.data.message === "Successfully Registered new user") {
@@ -120,26 +115,35 @@ const Register = () => {
     <Container>
       <Wrapper>
         <Title>CREATE AN ACCOUNT</Title>
-        <Form onSubmit={submitHandler}>
-          <Input placeholder="email" ref={emailInputRef} />
-
+        <Form onSubmit={handleSubmit(submitForm)}>
+          <Input type="text" name="email" placeholder="email" ref={register} />
+          {errors.email?.message}
           <Input
+            type="text"
+            name="userName"
+            placeholder="username"
+            ref={register}
+          />
+          {errors.userName?.message}
+          <Input
+            type="password"
+            name="password"
             placeholder="password"
-            ref={passInputRef}
-            onChange={confirmPass}
+            ref={register}
           />
+          {errors.password?.message}
           <Input
+            type="password"
+            name="confirmPassword"
             placeholder="confirm password"
-            ref={confirmPassInputRef}
-            onChange={confirmPass}
+            ref={register}
           />
+          {errors.confirmPassword && "Passwords Should Match!"}
           <Agreement>
             By creating an account, I consent to the processing of my personal
             data in accordance with the <b>PRIVACY POLICY</b>
           </Agreement>
-          {!isLoading && (
-            <Button disabled={!submitBtn ? true : false}>CREATE</Button>
-          )}
+          {!isLoading && <Button>CREATE</Button>}
           {isLoading && <p>Regestering ....</p>}
           {errMsg}
         </Form>

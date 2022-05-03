@@ -35,12 +35,13 @@ const Left = styled.div`
 const Center = styled.div`
   flex: 1;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   text-align: center;
 `;
 
 const Links = styled.h3`
   font-size: 20px;
+  padding: 10px;
 `;
 
 const Logo = styled.h1`
@@ -89,14 +90,6 @@ const Navbar = () => {
           </Link>
 
           <Links>Artwork</Links>
-
-          <Link
-            to="/Exhibition"
-            style={{ textDecoration: "none", color: "black" }}
-          >
-            <Links>Exhibition</Links>
-          </Link>
-          <Links>Competition</Links>
         </Center>
         <Right>
           {!isLoggedIn && (
@@ -123,13 +116,24 @@ const Navbar = () => {
               </Badge>
             </MenuItem>
           </Link>
-          {isLoggedIn && (
+          {isLoggedIn && authCtx.isAdmin === 1 && (
+            <Link
+              to="/admin"
+              style={{ textDecoration: "none", color: "black" }}
+            >
+              <MenuItem>
+                Hi {authCtx.userName}
+                <AccountCircleOutlined />
+              </MenuItem>
+            </Link>
+          )}
+          {isLoggedIn && !authCtx.isAdmin && (
             <Link
               to="/profile"
               style={{ textDecoration: "none", color: "black" }}
             >
               <MenuItem>
-                Hi {authCtx.id}
+                Hi {authCtx.userName}
                 <AccountCircleOutlined />
               </MenuItem>
             </Link>
