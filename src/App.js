@@ -19,10 +19,13 @@ import Exhibition from "./pages/Exhibition";
 import Profile from "./pages/Profile";
 import { useContext } from "react";
 import Admin from "./pages/Admin";
+import CheckOut from "./pages/CheckOut";
+import CartContext from "./Store/cart-context";
 //import { useSelector } from "react-redux";
 
 function App() {
   const authCtx = useContext(AuthContext);
+  const cartCtx = useContext(CartContext);
 
   return (
     <CartProvider>
@@ -37,7 +40,16 @@ function App() {
           {!authCtx.isLoggedIn && (
             <Route path="/register" element={<Register />} />
           )}
-
+          <Route
+            path="/checkout"
+            element={
+              authCtx.isLoggedIn ? (
+                <CheckOut />
+              ) : (
+                <Navigate to="/login" replace />
+              )
+            }
+          />
           <Route
             path="/profile"
             element={

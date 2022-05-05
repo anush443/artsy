@@ -9,12 +9,16 @@ import Navbar from "../Components/Navbar";
 
 import { mobile } from "../responsive";
 import CartContext from "../Store/cart-context";
+import AuthContext from "../Store/auth-context";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Container = styled.div``;
 
 const Wrapper = styled.div`
   padding: 50px;
   display: flex;
+
   ${mobile({ padding: "10px", flexDirection: "column" })}
 `;
 
@@ -26,6 +30,11 @@ const Image = styled.img`
   width: 100%;
   height: 80vh;
   object-fit: cover;
+  border-radius: 10px;
+  -webkit-box-shadow: 0px 0px 31px -19px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 0px 0px 31px -19px rgba(0, 0, 0, 0.75);
+  box-shadow: 0px 0px 31px -19px rgba(0, 0, 0, 0.75);
+
   ${mobile({ height: "40vh" })}
 `;
 
@@ -113,43 +122,84 @@ const Button = styled.button`
   background-color: white;
   cursor: pointer;
   font-weight: 500;
+
   &:hover {
     background-color: #f8f4f4;
   }
+  &:disabled {
+    background-color: white;
+    color: black;
+    cursor: not-allowed;
+  }
 `;
+
+const itemInCart = (cart, product_id) => {
+  const { length } = cart;
+  const id = length + 1;
+  const found = cart.some((el) => el.id === product_id);
+  if (found) {
+    return true;
+  } else {
+    return false;
+  }
+};
+
+const notify = (message) => toast(message);
+
 const Artwork = () => {
   const location = useLocation();
   const id = location.pathname.split("/")[2];
   const [artwork, setArtwork] = useState({});
-  const [quantity, setQuantity] = useState(1);
+  const authCtx = useContext(AuthContext);
+  //const [quantity, setQuantity] = useState(1);
   const cartCtx = useContext(CartContext);
-  //const dispatch = useDispatch();
-
-  const handleQuantity = (type) => {
-    if (type === "dec") {
-      quantity > 1 && setQuantity(quantity - 1);
-    } else {
-      setQuantity(quantity + 1);
-    }
-  };
 
   const handleClick = (artwork) => {
     const item = artwork.artwork;
-    //console.log(item);
+    console.log(item);
 
-    const addToCartHandler = (quantity, item) => {
+    const cart = cartCtx.items;
+
+    if (!itemInCart(cart, item.id)) {
       cartCtx.addItem({
         id: item.id,
         artist_name: item.artist_name,
         category: item.category,
         price: item.price,
         title: item.title,
-        amount: quantity,
+        amount: 1,
         img: item.img,
         size: item.size,
       });
-    };
-    addToCartHandler(quantity, item);
+      notify("Added to cart");
+      if (authCtx.isLoggedIn) {
+        const cartItem = {
+          userid: authCtx.id,
+          art_id: item.id,
+          price: item.price,
+          quantity: 1,
+        };
+        axios
+          .post(`http://localhost:5000/api/cart`, cartItem, {
+            headers: {
+              Authorization: "Bearer " + authCtx.token,
+            },
+          })
+          .then(() => {
+            console.log("asf");
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
+
+      //console.log(cartCtx.items);
+      //const ncart = cartCtx.items.map((item) => item);
+      //console.log(ncart);
+      //localStorage.setItem("cart", JSON.stringify(cartCtx.items));
+    } else {
+      console.log("item allready in cart");
+    }
   };
 
   useEffect(() => {
@@ -172,7 +222,19 @@ const Artwork = () => {
   return (
     <Container>
       <Navbar />
-
+      <ToastContainer
+        theme="dark"
+        type="error"
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover={false}
+      />
       <Wrapper>
         <ImgContainer>
           <Image src={artwork.img} />
@@ -191,14 +253,13 @@ const Artwork = () => {
             </Filter>
           </FilterContainer>
           <AddContainer>
-            <AmountContainer>
-              <Remove onClick={() => handleQuantity("dec")} />
-              <Amount>{quantity}</Amount>
-              <Add onClick={() => handleQuantity("inc")} />
-            </AmountContainer>
-            <Button onClick={() => handleClick({ artwork })}>
-              ADD TO CART
-            </Button>
+            {!itemInCart(cartCtx.items, artwork.id) ? (
+              <Button onClick={() => handleClick({ artwork })}>
+                Add to cart
+              </Button>
+            ) : (
+              <Button disabled>Item in Cart</Button>
+            )}
           </AddContainer>
         </InfoContainer>
       </Wrapper>

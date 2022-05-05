@@ -7,6 +7,9 @@ import Navbar from "../Components/Navbar";
 import { mobile } from "../responsive";
 import { useContext } from "react";
 import CartContext from "../Store/cart-context";
+import { Link, Navigate, useNavigate } from "react-router-dom";
+import axios from "axios";
+import AuthContext from "../Store/auth-context";
 
 const Container = styled.div``;
 
@@ -160,15 +163,31 @@ const Button = styled.button`
 
 const Cart = () => {
   const cartCtx = useContext(CartContext);
-
+  const authCtx = useContext(AuthContext);
+  //console.log(cartCtx.items);
+  const token = authCtx.token;
   const totalAmount = cartCtx.totalAmount;
 
-  const removeCartItem = (id) => {
-    cartCtx.removeItem(id);
-  };
+  const removeCartItem = (art_id) => {
+    const id = authCtx.id;
 
-  const addCartItem = (item) => {
-    cartCtx.addItem({ ...item, amount: 1 });
+    cartCtx.removeItem(art_id);
+
+    axios
+      .delete(`http://localhost:5000/api/cart/delete/${id}`, {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+        data: {
+          art_id: art_id,
+        },
+      })
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   return (
@@ -212,8 +231,6 @@ const Cart = () => {
                 <PriceDetail>
                   <ProductAmountContainer>
                     <Remove onClick={() => removeCartItem(item.id)} />
-                    <ProductAmount>{item.amount}</ProductAmount>
-                    <Add onClick={() => addCartItem(item)} />
                   </ProductAmountContainer>
                   <ProductPrice>₹{item.price * item.amount}</ProductPrice>
                 </PriceDetail>
@@ -241,7 +258,11 @@ const Cart = () => {
               <SummaryItemText>Total</SummaryItemText>
               <SummaryItemPrice>₹{totalAmount}</SummaryItemPrice>
             </SummaryItem>
-            {cartCtx.items.length > 0 && <Button>CHECKOUT NOW</Button>}
+            {cartCtx.items.length > 0 && (
+              <Link to="/checkout">
+                <Button>CHECKOUT NOW</Button>
+              </Link>
+            )}
           </Summary>
         </Bottom>
       </Wrapper>

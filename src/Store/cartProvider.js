@@ -28,6 +28,7 @@ const cartReducer = (state, action) => {
       updatedItems[existinCartItemIndex] = updatedItem;
     } else {
       updatedItems = state.items.concat(action.item);
+      // console.log(updatedItems);
     }
 
     return {
