@@ -1,8 +1,15 @@
 import CartContext from "./cart-context";
 import { useReducer } from "react";
 
+const retrievedCart = JSON.parse(localStorage.getItem("cart"));
+let initialItems;
+if (retrievedCart) {
+  initialItems = retrievedCart;
+} else {
+  initialItems = [];
+}
 const defaultCartState = {
-  items: [],
+  items: initialItems,
   totalAmount: 0,
 };
 
@@ -11,24 +18,29 @@ const cartReducer = (state, action) => {
     const updatedTotalAmount =
       state.totalAmount + action.item.price * action.item.amount;
 
-    const existinCartItemIndex = state.items.findIndex(
-      (item) => item.id === action.item.id
-    );
+    // const existinCartItemIndex = state.items.findIndex(
+    //   (item) => item.id === action.item.id
+    // );
 
-    const existinCartItem = state.items[existinCartItemIndex];
+    // const existinCartItem = state.items[existinCartItemIndex];
 
-    let updatedItems;
+    // let updatedItems;
 
-    if (existinCartItem) {
-      const updatedItem = {
-        ...existinCartItem,
-        amount: existinCartItem.amount + action.item.amount,
-      };
-      updatedItems = [...state.items];
-      updatedItems[existinCartItemIndex] = updatedItem;
-    } else {
-      updatedItems = state.items.concat(action.item);
-      // console.log(updatedItems);
+    // if (existinCartItem) {
+    //   const updatedItem = {
+    //     ...existinCartItem,
+    //     amount: existinCartItem.amount + action.item.amount,
+    //   };
+    //   updatedItems = [...state.items];
+    //   updatedItems[existinCartItemIndex] = updatedItem;
+    // } else {
+    //   updatedItems = state.items.concat(action.item);
+    //   // console.log(updatedItems);
+    // }
+    let updatedItems = state.items.concat(action.item);
+
+    if (action.item.loginStatus) {
+      localStorage.setItem("cart", JSON.stringify(updatedItems));
     }
 
     return {
@@ -42,17 +54,25 @@ const cartReducer = (state, action) => {
     );
     const existinCartItem = state.items[existinCartItemIndex];
     const updatedTotalAmount = state.totalAmount - existinCartItem.price;
-    let updatedItems;
-    if (existinCartItem.amount === 1) {
-      updatedItems = state.items.filter((item) => item.id !== action.id);
+    let updatedItems = state.items.filter((item) => item.id !== action.id);
+
+    if (updatedItems.length === 0) {
+      localStorage.removeItem("cart");
     } else {
-      const updatedItem = {
-        ...existinCartItem,
-        amount: existinCartItem.amount - 1,
-      };
-      updatedItems = [...state.items];
-      updatedItems[existinCartItemIndex] = updatedItem;
+      localStorage.setItem("cart", JSON.stringify(updatedItems));
     }
+
+    // if (existinCartItem.amount === 1) {
+    //   updatedItems = state.items.filter((item) => item.id !== action.id);
+    // } else {
+    //   const updatedItem = {
+    //     ...existinCartItem,
+    //     amount: existinCartItem.amount - 1,
+    //   };
+    //   updatedItems = [...state.items];
+    //   updatedItems[existinCartItemIndex] = updatedItem;
+    // }
+
     return {
       items: updatedItems,
       totalAmount: updatedTotalAmount,
@@ -62,17 +82,17 @@ const cartReducer = (state, action) => {
 };
 
 const CartProvider = (props) => {
-  const [cartState, dispatchCardAction] = useReducer(
+  const [cartState, dispatchCartAction] = useReducer(
     cartReducer,
     defaultCartState
   );
 
   const addItemToCartHandler = (item) => {
-    dispatchCardAction({ type: "ADD", item: item });
+    dispatchCartAction({ type: "ADD", item: item });
   };
 
   const removeItemFromCartHandler = (id) => {
-    dispatchCardAction({ type: "REMOVE", id: id });
+    dispatchCartAction({ type: "REMOVE", id: id });
   };
 
   const cartContext = {

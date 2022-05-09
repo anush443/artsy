@@ -1,28 +1,54 @@
-import React from "react";
-import Navbar from "../Components/Navbar";
+import React, { useEffect, useState } from "react";
+import Navbar from "../Components/Navbar/Navbar";
 import Footer from "../Components/Footer";
+// import styled from "styled-components"
+import ExhibitionCard from "../Components/ExhibitionCard";
 import styled from "styled-components";
+import { events } from "../data";
+import axios from "axios";
 
-const Container = styled.div`
-  height: 300px;
+const Container = styled.h1`
+  font-weight: 300;
+  font-size: 38.26px;
   text-align: center;
 `;
-
-const Title = styled.h1`
-  margin-top: 150px;
+const Box = styled.div`
+  margin-left: 10%;
+  display: flex;
 `;
+const Bar = styled.hr`
+  width: 200px;
+  margin-left: 46%;
+`;
+const Exhibitions = () => {
+  const [exhibitions, setExhibitions] = useState([]);
 
-const Exhibition = () => {
+  useEffect(() => {
+    const getExhibitions = async () => {
+      try {
+        const res = await axios.get(
+          "http://localhost:5000/api/exhibitions/allexhibitions"
+        );
+        setExhibitions(res.data);
+      } catch (err) {}
+    };
+    getExhibitions();
+  }, []);
+
   return (
     <>
       <Navbar />
-      <Container>
-        <Title>Comming Soon</Title>
-      </Container>
-
+      <Bar />
+      <Container>EXHIBITIONS</Container>
+      <Bar />
+      <Box>
+        {exhibitions.map((exhibition) => (
+          <ExhibitionCard exhibition={exhibition} />
+        ))}
+      </Box>
       <Footer />
     </>
   );
 };
 
-export default Exhibition;
+export default Exhibitions;

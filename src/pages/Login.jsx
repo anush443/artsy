@@ -7,6 +7,8 @@ import AuthContext from "../Store/auth-context";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import CartContext from "../Store/cart-context";
+import ExhibitionCartContext from "../Store/ExhibitionCart-context";
 
 const Container = styled.div`
   width: 100vw;
@@ -76,6 +78,7 @@ const schema = yup.object().shape({
   email: yup.string().email().required("Email is required"),
   password: yup.string().min(4).max(15).required(),
 });
+
 const Login = () => {
   const { register, handleSubmit, errors } = useForm({
     resolver: yupResolver(schema),
@@ -84,7 +87,9 @@ const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [errMsg, setErrorMsg] = useState();
 
+  const cartCtx = useContext(CartContext);
   const authCtx = useContext(AuthContext);
+  const exhibitionCtx = useContext(ExhibitionCartContext);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -107,7 +112,9 @@ const Login = () => {
           setErrorMsg(res.data.message);
         } else {
           //console.log(res.data.expiresIn);
-          console.log(res.data.isAdmin);
+          //console.log(res.data.isAdmin);
+          cartCtx.items.length = 0;
+          exhibitionCtx.exhibitions.length = 0;
           const expirationTime = new Date(
             new Date().getTime() + +res.data.expiresIn * 1000
           );

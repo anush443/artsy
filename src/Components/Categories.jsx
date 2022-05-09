@@ -8,6 +8,7 @@ const Header = styled.h1`
   text-align: center;
 `;
 const Container = styled.div`
+  padding: 10px;
   margin-top: 50px;
   z-index: 0;
   width: 100%;

@@ -1,7 +1,7 @@
 import React from "react";
 import Categories from "../Components/Categories";
 import Footer from "../Components/Footer";
-import Navbar from "../Components/Navbar";
+import Navbar from "../Components/Navbar/Navbar";
 import Products from "../Components/Products";
 import Slider from "../Components/Slider";
 import { popularProducts } from "../data";

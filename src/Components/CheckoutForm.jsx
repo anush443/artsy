@@ -101,6 +101,8 @@ const CheckoutForm = () => {
     resolver: yupResolver(schema),
   });
   const cartCtx = useContext(CartContext);
+  const authCtx = useContext(AuthContext);
+
   return (
     <>
       <h2> Checkout Form</h2>
@@ -246,7 +248,9 @@ const CheckoutForm = () => {
             <p>
               Total <Price>{cartCtx.totalAmount}</Price>
             </p>
-            <Button>Confirm Order</Button>
+            {authCtx.isLoggedIn && cartCtx.items.length > 0 && (
+              <Button>Confirm Order</Button>
+            )}
           </Container>
         </Col25>
       </Row>

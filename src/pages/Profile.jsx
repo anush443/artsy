@@ -1,5 +1,5 @@
 // import React, { useContext, useEffect, useState } from "react";
-// import Navbar from "../Components/Navbar";
+//import Navbar from "../Components/Navbar/Navbar";
 // import styled from "styled-components";
 // import { mobile } from "../responsive";
 // import AuthContext from "../Store/auth-context";

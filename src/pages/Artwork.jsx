@@ -5,7 +5,7 @@ import { useEffect, useState, useContext } from "react";
 import { useLocation } from "react-router-dom";
 import styled from "styled-components";
 import Footer from "../Components/Footer";
-import Navbar from "../Components/Navbar";
+import Navbar from "../Components/Navbar/Navbar";
 
 import { mobile } from "../responsive";
 import CartContext from "../Store/cart-context";
@@ -137,6 +137,7 @@ const itemInCart = (cart, product_id) => {
   const { length } = cart;
   const id = length + 1;
   const found = cart.some((el) => el.id === product_id);
+
   if (found) {
     return true;
   } else {
@@ -156,7 +157,7 @@ const Artwork = () => {
 
   const handleClick = (artwork) => {
     const item = artwork.artwork;
-    console.log(item);
+    //yconsole.log(item);
 
     const cart = cartCtx.items;
 
@@ -170,6 +171,7 @@ const Artwork = () => {
         amount: 1,
         img: item.img,
         size: item.size,
+        loginStatus: authCtx.isLoggedIn,
       });
       notify("Added to cart");
       if (authCtx.isLoggedIn) {

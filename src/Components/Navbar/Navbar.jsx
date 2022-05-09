@@ -5,11 +5,12 @@ import {
 import React, { useContext } from "react";
 import styled from "styled-components";
 import Badge from "@mui/material/Badge";
-import { mobile } from "../responsive";
+import { mobile } from "../../responsive";
 import { Link } from "react-router-dom";
 
-import CartContext from "../Store/cart-context";
-import AuthContext from "../Store/auth-context";
+import CartContext from "../../Store/cart-context";
+import AuthContext from "../../Store/auth-context";
+import ExhibitionCartContext from "../../Store/ExhibitionCart-context";
 
 const Container = styled.div`
   height: 60px;
@@ -67,12 +68,14 @@ const MenuItem = styled.div`
 const Navbar = () => {
   const cartCtx = useContext(CartContext);
   const authCtx = useContext(AuthContext);
+  const exhibitionCtx = useContext(ExhibitionCartContext);
 
   const isLoggedIn = authCtx.isLoggedIn;
-
-  const numberOfCartItems = cartCtx.items.reduce((curNumber, item) => {
-    return curNumber + item.amount;
-  }, 0);
+  const numberOfCartItems =
+    cartCtx.items.length + exhibitionCtx.exhibitions.length;
+  // const numberOfCartItems = cartCtx.items.reduce((curNumber, item) => {
+  //   return curNumber + item.amount;
+  // }, 0);
 
   const handleLogout = () => {
     authCtx.logout();
@@ -90,6 +93,12 @@ const Navbar = () => {
           </Link>
 
           <Links>Artwork</Links>
+          <Link
+            to="/Exhibition"
+            style={{ textDecoration: "none", color: "black" }}
+          >
+            <Links>Exhibition</Links>
+          </Link>
         </Center>
         <Right>
           {!isLoggedIn && (

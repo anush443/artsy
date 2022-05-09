@@ -87,6 +87,8 @@ export const AuthContextProvider = (props) => {
     localStorage.removeItem("userInfo");
     if (logoutTimer) {
       clearTimeout(logoutTimer);
+      localStorage.removeItem("cart");
+      localStorage.removeItem("exhibition");
     }
   });
 

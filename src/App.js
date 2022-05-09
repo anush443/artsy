@@ -20,56 +20,58 @@ import Profile from "./pages/Profile";
 import { useContext } from "react";
 import Admin from "./pages/Admin";
 import CheckOut from "./pages/CheckOut";
-import CartContext from "./Store/cart-context";
+import ExhibitionCartProvider from "./Store/exhibitionCartProvider";
 //import { useSelector } from "react-redux";
 
 function App() {
   const authCtx = useContext(AuthContext);
-  const cartCtx = useContext(CartContext);
 
   return (
-    <CartProvider>
-      <Router>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/artworks/:category" element={<ArtworkList />} />
-          <Route path="/artwork/:id" element={<Artwork />} />
-          <Route path="/cart" element={<Cart />} />
-          <Route path="/Exhibition" element={<Exhibition />} />
-          {!authCtx.isLoggedIn && <Route path="/login" element={<Login />} />}
-          {!authCtx.isLoggedIn && (
-            <Route path="/register" element={<Register />} />
-          )}
-          <Route
-            path="/checkout"
-            element={
-              authCtx.isLoggedIn ? (
-                <CheckOut />
-              ) : (
-                <Navigate to="/login" replace />
-              )
-            }
-          />
-          <Route
-            path="/profile"
-            element={
-              authCtx.isLoggedIn && !authCtx.isAdmin ? (
-                <Profile />
-              ) : (
-                <Navigate to="/login" replace />
-              )
-            }
-          />
-          <Route
-            path="/admin"
-            element={
-              authCtx.isAdmin ? <Admin /> : <Navigate to="/login" replace />
-            }
-          />
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
-      </Router>
-    </CartProvider>
+    <ExhibitionCartProvider>
+      <CartProvider>
+        <Router>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/artworks/:category" element={<ArtworkList />} />
+            <Route path="/artwork/:id" element={<Artwork />} />
+            <Route path="/cart" element={<Cart />} />
+            <Route path="/Exhibition" element={<Exhibition />} />
+            {!authCtx.isLoggedIn && <Route path="/login" element={<Login />} />}
+            {!authCtx.isLoggedIn && (
+              <Route path="/register" element={<Register />} />
+            )}
+
+            <Route
+              path="/checkout"
+              element={
+                authCtx.isLoggedIn ? (
+                  <CheckOut />
+                ) : (
+                  <Navigate to="/login" replace />
+                )
+              }
+            />
+            <Route
+              path="/profile"
+              element={
+                authCtx.isLoggedIn && !authCtx.isAdmin ? (
+                  <Profile />
+                ) : (
+                  <Navigate to="/login" replace />
+                )
+              }
+            />
+            <Route
+              path="/admin"
+              element={
+                authCtx.isAdmin ? <Admin /> : <Navigate to="/login" replace />
+              }
+            />
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </Router>
+      </CartProvider>
+    </ExhibitionCartProvider>
   );
 }
 

@@ -3,13 +3,14 @@ import { Add, Remove } from "@material-ui/icons";
 import styled from "styled-components";
 
 import Footer from "../Components/Footer";
-import Navbar from "../Components/Navbar";
+import Navbar from "../Components/Navbar/Navbar";
 import { mobile } from "../responsive";
 import { useContext } from "react";
 import CartContext from "../Store/cart-context";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import axios from "axios";
 import AuthContext from "../Store/auth-context";
+import ExhibitionCartContext from "../Store/ExhibitionCart-context";
 
 const Container = styled.div``;
 
@@ -164,32 +165,93 @@ const Button = styled.button`
 const Cart = () => {
   const cartCtx = useContext(CartContext);
   const authCtx = useContext(AuthContext);
-  //console.log(cartCtx.items);
+  const exhibitionCtx = useContext(ExhibitionCartContext);
+
   const token = authCtx.token;
-  const totalAmount = cartCtx.totalAmount;
+  const totalAmount = cartCtx.totalAmount + exhibitionCtx.totalAmount;
+  const shoppingBag = cartCtx.items.length + exhibitionCtx.exhibitions.length;
 
   const removeCartItem = (art_id) => {
     const id = authCtx.id;
 
     cartCtx.removeItem(art_id);
-
-    axios
-      .delete(`http://localhost:5000/api/cart/delete/${id}`, {
-        headers: {
-          Authorization: "Bearer " + token,
-        },
-        data: {
-          art_id: art_id,
-        },
-      })
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    if (authCtx.isLoggedIn) {
+      axios
+        .delete(`http://localhost:5000/api/cart/delete/${id}`, {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+          data: {
+            art_id: art_id,
+          },
+        })
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
   };
 
+  const addToExhibitionCart = (exhibition, curQty) => {
+    //console.log(curQty);
+    exhibitionCtx.addExhibition({ ...exhibition, qty: 1 });
+    if (authCtx.isLoggedIn) {
+      const data = {
+        exhi_id: exhibition.id,
+        price: exhibition.price,
+        qty: curQty + 1,
+      };
+      axios
+        .put(
+          `http://localhost:5000/api/exhibitioncart/update/${authCtx.id}`,
+          data,
+          {
+            headers: {
+              Authorization: "Bearer " + authCtx.token,
+            },
+          }
+        )
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  };
+  const removeFromExhibitionCart = (exhibition, curQty) => {
+    //console.log(exhibitionCtx.exhibitions);
+    exhibitionCtx.removeExhibition(exhibition.id);
+    //console.log(curQty);
+    //make a put request and update qty=qty-1
+    if (authCtx.isLoggedIn) {
+      if (authCtx.isLoggedIn) {
+        const data = {
+          exhi_id: exhibition.id,
+          price: exhibition.price,
+          qty: curQty - 1,
+        };
+        axios
+          .put(
+            `http://localhost:5000/api/exhibitioncart/update/${authCtx.id}`,
+            data,
+            {
+              headers: {
+                Authorization: "Bearer " + authCtx.token,
+              },
+            }
+          )
+          .then((res) => {
+            console.log(res);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
+    }
+  };
   return (
     <Container>
       <Navbar />
@@ -199,7 +261,7 @@ const Cart = () => {
         <Top>
           <TopButton>CONTINUE SHOPPING</TopButton>
           <TopTexts>
-            <TopText>Shopping Bag(2)</TopText>
+            <TopText>Shopping Bag({shoppingBag})</TopText>
             <TopText>Your Wishlist (0)</TopText>
           </TopTexts>
           {cartCtx.items.length > 0 && (
@@ -208,6 +270,7 @@ const Cart = () => {
         </Top>
         <Bottom>
           <Info>
+            {cartCtx.items && <h3>Artworks</h3>}
             {cartCtx.items.map((item) => (
               <Product>
                 <ProductDetail>
@@ -236,6 +299,50 @@ const Cart = () => {
                 </PriceDetail>
               </Product>
             ))}
+            {exhibitionCtx.exhibitions && <h3>Your Tickets</h3>}
+            {exhibitionCtx.exhibitions.map((exhibition) => (
+              <Product>
+                <ProductDetail>
+                  <Image src={exhibition.img} />
+                  <Details>
+                    <ProductId>
+                      <b>ID:</b> {exhibition.id}
+                    </ProductId>
+                    <ProductName>
+                      <b>{exhibition.name}</b>
+                    </ProductName>
+                    <ProductName>
+                      from <b>{exhibition.from_date}</b> to{" "}
+                      <b>{exhibition.to_date}</b>
+                    </ProductName>
+
+                    <ProductSize>
+                      <b>Price:</b> {exhibition.price}
+                      <br></br>
+                      <b>No of tickets </b> {exhibition.qty}
+                    </ProductSize>
+                  </Details>
+                </ProductDetail>
+                <PriceDetail>
+                  <ProductAmountContainer>
+                    <Add
+                      onClick={() =>
+                        addToExhibitionCart(exhibition, exhibition.qty)
+                      }
+                    />
+                    <ProductAmount>{exhibition.qty}</ProductAmount>
+                    <Remove
+                      onClick={() =>
+                        removeFromExhibitionCart(exhibition, exhibition.qty)
+                      }
+                    />
+                  </ProductAmountContainer>
+                  <ProductPrice>
+                    ₹{exhibition.price * exhibition.qty}
+                  </ProductPrice>
+                </PriceDetail>
+              </Product>
+            ))}
 
             <Hr />
           </Info>
@@ -252,7 +359,7 @@ const Cart = () => {
             </SummaryItem>
             <SummaryItem>
               <SummaryItemText>Shipping Discount</SummaryItemText>
-              <SummaryItemPrice>₹ -5.90</SummaryItemPrice>
+              <SummaryItemPrice>₹00</SummaryItemPrice>
             </SummaryItem>
             <SummaryItem type="total">
               <SummaryItemText>Total</SummaryItemText>
