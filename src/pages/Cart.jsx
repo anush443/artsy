@@ -5,10 +5,10 @@ import styled from "styled-components";
 import Footer from "../Components/Footer";
 import Navbar from "../Components/Navbar/Navbar";
 import { mobile } from "../responsive";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import CartContext from "../Store/cart-context";
 import { Link, Navigate, useNavigate } from "react-router-dom";
-import axios from "axios";
+import axios, { Axios } from "axios";
 import AuthContext from "../Store/auth-context";
 import ExhibitionCartContext from "../Store/ExhibitionCart-context";
 
@@ -171,13 +171,14 @@ const Cart = () => {
   const totalAmount = cartCtx.totalAmount + exhibitionCtx.totalAmount;
   const shoppingBag = cartCtx.items.length + exhibitionCtx.exhibitions.length;
 
+  //console.log(totalAmount);
   const removeCartItem = (art_id) => {
-    const id = authCtx.id;
+    //const id = authCtx.id;
 
     cartCtx.removeItem(art_id);
     if (authCtx.isLoggedIn) {
       axios
-        .delete(`http://localhost:5000/api/cart/delete/${id}`, {
+        .delete(`http://localhost:5000/api/cart/delete/${authCtx.id}`, {
           headers: {
             Authorization: "Bearer " + token,
           },
@@ -224,9 +225,9 @@ const Cart = () => {
   const removeFromExhibitionCart = (exhibition, curQty) => {
     //console.log(exhibitionCtx.exhibitions);
     exhibitionCtx.removeExhibition(exhibition.id);
-    //console.log(curQty);
+    console.log(curQty);
     //make a put request and update qty=qty-1
-    if (authCtx.isLoggedIn) {
+    if (authCtx.isLoggedIn && curQty > 1) {
       if (authCtx.isLoggedIn) {
         const data = {
           exhi_id: exhibition.id,
@@ -250,6 +251,24 @@ const Cart = () => {
             console.log(err);
           });
       }
+    }
+    if (authCtx.isLoggedIn && curQty === 1) {
+      axios
+        .delete(
+          `http://localhost:5000/api/exhibitioncart/delete/${authCtx.id}`,
+          {
+            headers: {
+              Authorization: "Bearer " + token,
+            },
+            data: { exhi_id: exhibition.id },
+          }
+        )
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     }
   };
   return (
@@ -283,7 +302,7 @@ const Cart = () => {
                       <b>Artist:</b> {item.artist_name}
                     </ProductName>
 
-                    <ProductId>
+                    <ProductId key={item.id}>
                       <b>ID:</b> {item.id}
                     </ProductId>
                     <ProductSize>
@@ -305,7 +324,7 @@ const Cart = () => {
                 <ProductDetail>
                   <Image src={exhibition.img} />
                   <Details>
-                    <ProductId>
+                    <ProductId key={exhibition.id}>
                       <b>ID:</b> {exhibition.id}
                     </ProductId>
                     <ProductName>
@@ -365,7 +384,8 @@ const Cart = () => {
               <SummaryItemText>Total</SummaryItemText>
               <SummaryItemPrice>₹{totalAmount}</SummaryItemPrice>
             </SummaryItem>
-            {cartCtx.items.length > 0 && (
+            {(cartCtx.items.length > 0 ||
+              exhibitionCtx.exhibitions.length > 0) && (
               <Link to="/checkout">
                 <Button>CHECKOUT NOW</Button>
               </Link>

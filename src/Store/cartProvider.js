@@ -2,15 +2,19 @@ import CartContext from "./cart-context";
 import { useReducer } from "react";
 
 const retrievedCart = JSON.parse(localStorage.getItem("cart"));
+
 let initialItems;
+let initialToatalAmount = 0;
+
 if (retrievedCart) {
   initialItems = retrievedCart;
+  initialItems.forEach((item) => (initialToatalAmount += item.price));
 } else {
   initialItems = [];
 }
 const defaultCartState = {
   items: initialItems,
-  totalAmount: 0,
+  totalAmount: initialToatalAmount,
 };
 
 const cartReducer = (state, action) => {

@@ -22,6 +22,14 @@ import Admin from "./pages/Admin";
 import CheckOut from "./pages/CheckOut";
 import ExhibitionCartProvider from "./Store/exhibitionCartProvider";
 //import { useSelector } from "react-redux";
+import AddArtist from "./Components/admin/AddArtist";
+import AddEvent from "./Components/admin/AddEvent";
+import AddPaintings from "./Components/admin/AddPaintings";
+import AdminHome from "./Components/admin/AdminHome";
+import Artist from "./Components/admin/Artist";
+import ArtworkTable from "./Components/admin/Artwork";
+import EditArtist from "./Components/admin/EditArtist";
+import Events from "./Components/admin/Events";
 
 function App() {
   const authCtx = useContext(AuthContext);
@@ -67,7 +75,80 @@ function App() {
                 authCtx.isAdmin ? <Admin /> : <Navigate to="/login" replace />
               }
             />
+
             <Route path="*" element={<Navigate to="/" replace />} />
+            <Route
+              path="/adminhome"
+              element={
+                authCtx.isAdmin ? (
+                  <AdminHome />
+                ) : (
+                  <Navigate to="/login" replace />
+                )
+              }
+            />
+            <Route
+              path="/addpaintings"
+              element={
+                authCtx.isAdmin ? (
+                  <AddPaintings />
+                ) : (
+                  <Navigate to="/login" replace />
+                )
+              }
+            />
+            <Route
+              path="/artist"
+              element={
+                authCtx.isAdmin ? <Artist /> : <Navigate to="/login" replace />
+              }
+            />
+            <Route
+              path="/addartist"
+              element={
+                authCtx.isAdmin ? (
+                  <AddArtist />
+                ) : (
+                  <Navigate to="/login" replace />
+                )
+              }
+            />
+            <Route
+              path="/editartist/:artist_id"
+              element={
+                authCtx.isAdmin ? (
+                  <EditArtist />
+                ) : (
+                  <Navigate to="/login" replace />
+                )
+              }
+            />
+            <Route
+              path="/artwork"
+              element={
+                authCtx.isAdmin ? (
+                  <ArtworkTable />
+                ) : (
+                  <Navigate to="/login" replace />
+                )
+              }
+            />
+            <Route
+              path="/events"
+              element={
+                authCtx.isAdmin ? <Events /> : <Navigate to="/login" replace />
+              }
+            />
+            <Route
+              path="/addvent"
+              element={
+                authCtx.isAdmin ? (
+                  <AddEvent />
+                ) : (
+                  <Navigate to="/login" replace />
+                )
+              }
+            />
           </Routes>
         </Router>
       </CartProvider>

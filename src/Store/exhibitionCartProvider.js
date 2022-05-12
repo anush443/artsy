@@ -3,15 +3,18 @@ import { useReducer } from "react";
 
 const retrievedExhibitionCart = JSON.parse(localStorage.getItem("exhibition"));
 let initialExhibitions;
+let initialToatalAmount = 0;
 if (retrievedExhibitionCart) {
   initialExhibitions = retrievedExhibitionCart;
+  initialExhibitions.forEach(
+    (exhibition) => (initialToatalAmount += exhibition.price * exhibition.qty)
+  );
 } else {
   initialExhibitions = [];
 }
-
 const defaultExhibitionCartState = {
   exhibitions: initialExhibitions,
-  totalAmount: 0,
+  totalAmount: initialToatalAmount,
 };
 
 const exhibitionCartReducer = (state, action) => {
