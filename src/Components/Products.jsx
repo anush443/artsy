@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 
 import ProductCard from "./ProductCard";
+import { mobile } from "../responsive";
 
 const Header = styled.h1`
   margin-top: 100px;
@@ -18,11 +19,38 @@ const Container = styled.div`
   justify-content: space-between;
 `;
 
-const Products = ({ cat, filters, sort, title }) => {
+const FilterContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;
+
+const Filter = styled.div`
+  margin: 20px;
+  ${mobile({ width: "0px 20px", display: "flex", flexDirection: "column" })}
+`;
+
+const FilterText = styled.span`
+  font-size: 20px;
+  font-weight: 600;
+  margin-right: 20px;
+  ${mobile({ marginRight: "0px" })}
+`;
+
+const Select = styled.select`
+  padding: 10px;
+  margin-right: 20px;
+  ${mobile({ margin: "10px 0" })}
+`;
+
+const Products = ({ cat, filters, sort }) => {
   //console.log(cat, filter, sort, title);
 
   const [artworks, setArtworks] = useState([]);
   const [filteredartworks, setFilteredArtworks] = useState([]);
+
+  const artistOptions = new Map([
+    ...artworks.map((artwork) => [artwork.artist_name]),
+  ]);
 
   useEffect(() => {
     const getArtworks = async () => {
@@ -63,9 +91,34 @@ const Products = ({ cat, filters, sort, title }) => {
     }
   }, [sort]);
 
+  const showByArtist = (e) => {
+    if (e.target.value !== "") {
+      setFilteredArtworks(
+        artworks.filter((artwork) => {
+          return artwork.artist_name === e.target.value;
+        })
+      );
+    } else {
+      setFilteredArtworks(artworks);
+    }
+  };
+
   return (
     <>
-      <Header>{title}</Header>
+      {cat && (
+        <FilterContainer>
+          <Filter>
+            <FilterText>Search By Artist</FilterText>
+            <Select name="show by artist" onChange={showByArtist}>
+              <option value="">All</option>
+              {[...artistOptions].map((name) => (
+                <option>{name}</option>
+              ))}
+            </Select>
+          </Filter>
+        </FilterContainer>
+      )}
+
       <Container>
         {cat
           ? filteredartworks.map((item) => <ProductCard item={item} />)

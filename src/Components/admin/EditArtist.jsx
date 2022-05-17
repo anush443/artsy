@@ -46,48 +46,13 @@ const EditArtist = () => {
   const { register, handleSubmit, errors } = useForm({
     resolver: yupResolver(schema),
   });
-  //  const onNameChangeHandler = (paname,artist_name) =>{
-
-  //    alert(artist_name + paname);
-  //    if(paname==="")
-  //    {
-  //        setname(artist_name);
-  //    }
-  //    else
-  //    {
-  //        setname(paname);
-  //    }
-
-  //   };
-
-  // const onPhoneChangeHandler = (paphone,phone) =>{
-  //   alert(phone + paphone);
-  //   if(paphone==="")
-  //   {
-  //       setphone(phone);
-  //   }
-  //   else
-  //   {
-  //       setphone(paphone);
-  //   }
-
-  //  };
-
-  //  const onEmailChangeHandler = (paemail,email) =>{
-  //   alert(paemail + email);
-  //   if(paemail==="")
-  //   {
-  //       setemail(email);
-  //   }
-  //   else
-  //   {
-  //       setemail(paemail);
-  //   }
-
-  //  };
-
+  console.log(artist_id);
   useEffect(() => {
-    Axios.get(`http://localhost:7000/api/findArtistinformation/${artist_id}`)
+    Axios.get(`http://localhost:5000/api/artworks/findartist/${artist_id}`, {
+      headers: {
+        Authorization: "Bearer " + authCtx.token,
+      },
+    })
       .then((response) => {
         setArtist(response.data);
       })
@@ -95,7 +60,7 @@ const EditArtist = () => {
   }, [artist_id]);
 
   const submitForm = (aname, aemail, aphone, name, email, phone, data) => {
-    console.log(data);
+    //console.log(data);
 
     if (name === "") {
       name = aname;
@@ -126,8 +91,6 @@ const EditArtist = () => {
       }
     ).then(() => {
       window.location.reload(false);
-      //  let path = `localhost:3000/Artist`;
-      //  navigate(path);
     });
   };
 
@@ -146,7 +109,7 @@ const EditArtist = () => {
       </div>
 
       <Form>
-        <label>UPDATE INFORMATION</label>
+        <label className="adminlabel">UPDATE INFORMATION</label>
         {artist.map((item) => (
           <form
             onSubmit={() =>

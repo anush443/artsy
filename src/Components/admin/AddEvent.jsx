@@ -133,7 +133,7 @@ const AddEvent = () => {
         </button>
         <Form>
           <form onSubmit={() => handleSubmit(submitForm())}>
-            <label>INFORMATION</label> <br></br>
+            <label className="adminlabel">INFORMATION</label> <br></br>
             <br></br>
             <input
               type="text"
@@ -206,6 +206,7 @@ const AddEvent = () => {
             <input
               type="text"
               name="eimagepath"
+              className="admininput"
               placeholder="Image Path"
               ref={register}
               value={url}
@@ -228,7 +229,7 @@ const AddEvent = () => {
               onChange={(e) => imageHandler(e)}
             />
             <Buttoncontainer>
-              <label htmlFor="input">
+              <label className="adminlabel" htmlFor="input">
                 <i class="nbtn">Choose Image</i>
               </label>
 

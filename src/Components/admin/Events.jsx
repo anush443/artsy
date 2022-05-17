@@ -59,29 +59,35 @@ const Events = () => {
             <table>
               <thead>
                 <tr>
-                  <th>Event ID</th>
-                  <th>Event Name</th>
-                  <th>Price</th>
-                  <th>Start Date</th>
-                  <th>End Date</th>
-                  <th>Limit</th>
-                  <th>Description</th>
-                  <th>Banner</th>
-
-                  <th>Edit</th>
-                  <th>Delete</th>
+                  <th className="adminth">Event ID</th>
+                  <th className="adminth">Event Name</th>
+                  <th className="adminth">Price</th>
+                  <th className="adminth">Start Date</th>
+                  <th className="adminth">End Date</th>
+                  <th className="adminth">Limit</th>
+                  <th className="adminth">Description</th>
+                  <th className="adminth">Banner</th>
+                  <th className="adminth">Edit</th>
+                  <th className="adminth">Delete</th>
                 </tr>
               </thead>
               {exhibitionsList.map((item) => (
                 <tbody>
                   <tr>
-                    <td key={item.exhi_id}>{item.exhi_id}</td>
-                    <td>{item.exhi_name}</td>
-                    <td>{item.exhi_price}</td>
-                    <td>{convertDate(item.from_date)}</td>
-                    <td>{convertDate(item.to_date)}</td>
-                    <td>{item.max_limit}</td>
-                    <td>{item.exhi_description}</td>
+                    <td className="admintd" key={item.exhi_id}>
+                      {item.exhi_id}
+                    </td>
+                    <td className="admintd">{item.exhi_name}</td>
+                    <td className="admintd">{item.exhi_price}</td>
+                    <td className="admintd">{convertDate(item.from_date)}</td>
+                    <td className="admintd">{convertDate(item.to_date)}</td>
+                    <td className="admintd">{item.max_limit}</td>
+                    <td
+                      className="admintd"
+                      style={{ width: "20%", height: "auto" }}
+                    >
+                      {item.exhi_description}
+                    </td>
 
                     <td>
                       {" "}

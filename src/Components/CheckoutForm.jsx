@@ -10,6 +10,9 @@ import LocationCityIcon from "@mui/icons-material/LocationCity";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import ExhibitionCartContext from "../Store/ExhibitionCart-context";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const Row = styled.div`
   display: -ms-flexbox; /* IE10 */
@@ -90,6 +93,37 @@ const Button = styled.button`
   }
 `;
 
+const paymentHelper = (paymentType, amount, authCtx, exhibitionCtx) => {
+  axios
+    .post(
+      `http://localhost:5000/api/payment/${authCtx.id}`,
+      { amount, paymentType },
+      {
+        headers: {
+          Authorization: "Bearer " + authCtx.token,
+        },
+      }
+    )
+    .then((res) => {
+      alert("Payment Succesfull");
+
+      if (paymentType === 0) {
+        localStorage.removeItem("cart");
+        window.location.reload(false);
+      } else if (paymentType === 1) {
+        localStorage.removeItem("exhibition");
+        window.location.reload(false);
+      } else {
+        localStorage.removeItem("cart");
+        localStorage.removeItem("exhibition");
+        window.location.reload(false);
+      }
+    })
+    .catch((err) => {
+      alert("Payment failed");
+    });
+};
+
 const schema = yup.object().shape({
   email: yup.string().email().required("Email is required"),
   userName: yup.string().min(4).max(8).required(),
@@ -102,6 +136,41 @@ const CheckoutForm = () => {
   });
   const cartCtx = useContext(CartContext);
   const authCtx = useContext(AuthContext);
+  const exhibitionCtx = useContext(ExhibitionCartContext);
+  const cartItems = cartCtx.items.length + exhibitionCtx.exhibitions.length;
+  const totalAmount = cartCtx.totalAmount + exhibitionCtx.totalAmount;
+  const navigate = useNavigate();
+
+  let paymentType;
+  //only artworks
+  if (cartCtx.items.length > 0 && exhibitionCtx.exhibitions.length === 0) {
+    paymentType = 0;
+    console.log(paymentType);
+  }
+
+  //only exhibitions
+  if (cartCtx.items.length === 0 && exhibitionCtx.exhibitions.length > 0) {
+    paymentType = 1;
+    console.log(paymentType);
+  }
+  //both artworks and  exhibitions
+  if (cartCtx.items.length > 0 && exhibitionCtx.exhibitions.length > 0) {
+    paymentType = 2;
+    console.log(paymentType);
+  }
+
+  const handlePayment = () => {
+    if (paymentType === 0) {
+      paymentHelper(paymentType, totalAmount, authCtx, exhibitionCtx);
+      navigate("/profile");
+    } else if (paymentType === 1) {
+      paymentHelper(paymentType, totalAmount, authCtx, exhibitionCtx);
+      navigate("/profile");
+    } else {
+      paymentHelper(paymentType, totalAmount, authCtx, exhibitionCtx);
+      navigate("/profile");
+    }
+  };
 
   return (
     <>
@@ -234,7 +303,7 @@ const CheckoutForm = () => {
             <h4>
               Cart{" "}
               <Price>
-                <i></i> <b>{cartCtx.items.length}</b>
+                <i></i> <b>{cartItems}</b>
               </Price>
             </h4>
 
@@ -244,13 +313,23 @@ const CheckoutForm = () => {
                 <Price>{item.price}</Price>
               </p>
             ))}
+            {exhibitionCtx.exhibitions.length > 0 && <b>Your Tickets</b>}
+            {exhibitionCtx.exhibitions.map((exhibition) => (
+              <p>
+                {exhibition.name} x {exhibition.qty} {exhibition.price}
+                <Price>{exhibition.price * exhibition.qty}</Price>
+              </p>
+            ))}
 
             <p>
-              Total <Price>{cartCtx.totalAmount}</Price>
+              Total <Price>{totalAmount}</Price>
             </p>
-            {authCtx.isLoggedIn && cartCtx.items.length > 0 && (
-              <Button>Confirm Order</Button>
-            )}
+            {(authCtx.isLoggedIn && cartCtx.items.length > 0 && (
+              <Button onClick={() => handlePayment()}>Confirm and pay</Button>
+            )) ||
+              (authCtx.isLoggedIn && exhibitionCtx.exhibitions.length > 0 && (
+                <Button onClick={() => handlePayment()}>Confirm & pay</Button>
+              ))}
           </Container>
         </Col25>
       </Row>

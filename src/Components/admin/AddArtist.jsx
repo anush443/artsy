@@ -16,7 +16,7 @@ const Form = styled.div`
   top: 14%;
   font-size: 18px;
   height: auto;
-  margin-left: 450px;
+  margin-left: 40%;
   border: 1px solid black;
   border-radius: 10px;
   display: inline-block;
@@ -65,7 +65,7 @@ const AddArtist = () => {
     <>
       <Form>
         <form onSubmit={handleSubmit(submitForm)}>
-          <label>ARTIST INFORMATION</label>
+          <label className="adminlabel">ARTIST INFORMATION</label>
           <input
             type="text"
             name="Name"
@@ -81,6 +81,7 @@ const AddArtist = () => {
             type="text"
             name="Email"
             placeholder="Email"
+            className="admininput"
             ref={register}
             onChange={(e) => {
               setemail(e.target.value);
@@ -91,6 +92,7 @@ const AddArtist = () => {
             type="number"
             name="Phone"
             placeholder="Phone Number"
+            className="admininput"
             ref={register}
             onChange={(e) => {
               setphone(e.target.value);

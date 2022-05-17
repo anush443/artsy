@@ -52,7 +52,7 @@ const AdminHome = () => {
           <Text>Happy ArtSy</Text>
         </Heading>
       </Conatainer>
-      <div style={{ padding: "5px", display: "flex", marginLeft: "150px" }}>
+      <div style={{ padding: "5%", display: "flex", marginLeft: "150px" }}>
         <DCard>
           <Name>Total Users</Name>
           <Number>3000</Number>

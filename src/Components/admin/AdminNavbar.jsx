@@ -64,7 +64,16 @@ const AdminNavbar = () => {
         <Link to="/" style={{ textDecoration: "none", color: "black" }}>
           <Links>Payment</Links>
         </Link>
-        <button onClick={handleLogout}>Logout</button>
+        <button
+          style={{
+            backgroundColor: "transparent",
+            color: "black",
+            border: "none",
+          }}
+          onClick={handleLogout}
+        >
+          Logout
+        </button>
       </LeftContainer>
     </>
   );

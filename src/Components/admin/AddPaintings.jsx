@@ -66,9 +66,28 @@ const AddPaintings = () => {
 
   const authCtx = useContext(AuthContext);
 
+  const [artistlist, setArtistlist] = useState([]);
+
+  useEffect(() => {
+    const getArtist = async () => {
+      try {
+        const res = await Axios.get(
+          `http://localhost:5000/api/artworks/allartists`,
+          {
+            headers: {
+              Authorization: "Bearer " + authCtx.token,
+            },
+          }
+        );
+
+        setArtistlist(res.data);
+      } catch {}
+    };
+    getArtist();
+  }, [authCtx.token]);
+
   const submitForm = (data) => {
     console.log(data);
-    let x;
 
     Axios.post(
       "http://localhost:5000/api/artworks/addartwork",
@@ -153,11 +172,12 @@ const AddPaintings = () => {
       </div>
       <Form>
         <form onSubmit={handleSubmit(submitForm)}>
-          <label>INFORMATION</label> <br></br>
+          <label className="adminlabel">INFORMATION</label> <br></br>
           <br></br>
           <input
             type="text"
             name="id"
+            className="admininput"
             placeholder="Artwork ID"
             onChange={(e) => {
               setid(e.target.value);
@@ -208,7 +228,7 @@ const AddPaintings = () => {
           <p> {errors.Category?.message} </p>
           <select
             name="Size"
-            className="adminiselect"
+            className="adminselect"
             onChange={(e) => {
               setsize(e.target.value);
             }}
@@ -227,6 +247,7 @@ const AddPaintings = () => {
           <input
             type="text"
             name="ImagePath"
+            className="admininput"
             placeholder="Image Path"
             value={url}
             ref={register}
@@ -243,16 +264,19 @@ const AddPaintings = () => {
             ref={register}
           />
           <p> {errors.Description?.message} </p>
-          <input
-            type="text"
+          <select
             name="ArtistID"
-            placeholder="Artist Id"
-            className="admininput"
+            className="adminselect"
             onChange={(e) => {
               setartist_id(e.target.value);
             }}
             ref={register}
-          />
+          >
+            <option value="">Artist</option>
+            {artistlist.map((item) => (
+              <option value={item.artist_id}>{item.artist_name}</option>
+            ))}
+          </select>
           <p> {errors.ArtistID?.message} </p>
           <input type="submit" className="nbtn" id="Submit" />
         </form>
@@ -268,7 +292,7 @@ const AddPaintings = () => {
             onChange={(e) => imageHandler(e)}
           />
           <Buttoncontainer>
-            <label htmlFor="input">
+            <label className="adminlabel" htmlFor="input">
               <i class="nbtn">Choose Image</i>
             </label>
 

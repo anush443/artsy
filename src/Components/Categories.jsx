@@ -13,7 +13,7 @@ const Container = styled.div`
   z-index: 0;
   width: 100%;
   display: flex;
-  justify-content: space-around;
+  justify-content: space-evenly;
   flex-wrap: wrap;
 `;
 

@@ -5,30 +5,25 @@ import Axios from "axios";
 import AddArtist from "./AddArtist";
 import { Link } from "react-router-dom";
 import AuthContext from "../../Store/auth-context";
+import ReactPaginate from "react-paginate";
+import EditIcon from "@mui/icons-material/Edit";
 
 const ArtistTable = styled.div`
   width: auto;
   height: auto;
-  padding: 10px;
-  margin-left: 20px;
+  alignitems: center;
 `;
 const Conatainer = styled.div`
   display: flex;
   content-align: right;
 `;
 const Artist = () => {
+  const [tableshow, settableShow] = useState(true);
   const [artistlist, setArtistlist] = useState([]);
   const authCtx = useContext(AuthContext);
 
-  //   useEffect(() => {
-
-  //   Axios.get('http://localhost:7000/api/Artistinformation').then((response)=>{
-  //     setArtistlist(response.data);
-  //   })
-  //  });
-
   useEffect(() => {
-    const getArtwork = async () => {
+    const getArtist = async () => {
       try {
         const res = await Axios.get(
           `http://localhost:5000/api/artworks/allartists`,
@@ -42,32 +37,57 @@ const Artist = () => {
         setArtistlist(res.data);
       } catch {}
     };
-    getArtwork();
+    getArtist();
   }, [authCtx.token]);
 
-  const handleRemoveArtist = (id, aname) => {
-    alert("Are Sure to Remove " + aname + " from Artist ");
-    const artsistId = id;
-    Axios.delete(
-      `http://localhost:5000/api/artworks/delete/artist/${artsistId}`,
-      {
-        headers: {
-          Authorization: "Bearer " + authCtx.token,
-        },
-      }
-    ).then(() => {
-      alert(aname + " Information Removed Successfully");
+  /////
+  // start
+  const [pageNumber, setPageNumber] = useState(0);
+  const usersPerPage = 5;
+  const pagesVisited = pageNumber * usersPerPage;
+  const displayArtist = artistlist
+    .slice(pagesVisited, pagesVisited + usersPerPage)
+    .map((item) => {
+      return (
+        <tbody>
+          <tr>
+            <td className="admintd">{item.artist_id}</td>
+            <td className="admintd">{item.artist_name}</td>
+            <td className="admintd">{item.email}</td>
+            <td className="admintd">{item.phone}</td>
+            <td className="admintd">
+              <Link
+                to={`/EditArtist/${item.artist_id}`}
+                style={{ textDecoration: "none" }}
+              >
+                <EditIcon />
+              </Link>
+            </td>
+            <td></td>
+          </tr>
+        </tbody>
+      );
     });
-  };
 
-  const [tableshow, settableShow] = useState(true);
+  const pageCount = Math.ceil(artistlist.length / usersPerPage);
+
+  const changePage = ({ selected }) => {
+    setPageNumber(selected);
+  };
+  ////
 
   return (
     <>
       <Conatainer>
         <AdminNavbar />
 
-        <div style={{ display: "block" }}>
+        <div
+          style={{
+            display: "inline-block",
+            width: "100%",
+            alignItems: "center",
+          }}
+        >
           <div style={{ display: "flex" }}>
             <h3 style={{ padding: "20px", marginLeft: "10px" }}>
               ARTIST INFORMATION
@@ -76,51 +96,43 @@ const Artist = () => {
               onClick={() => settableShow((prev) => !prev)}
               className="btn"
             >
-              <span>{tableshow ? "+add" : "back"}</span>
+              <span>{tableshow ? "+ADD" : "View"}</span>
             </button>
           </div>
           {tableshow && (
             <ArtistTable>
-              <table>
+              <table
+                style={{
+                  marginTop: "0%",
+                  marginBottom: "0%",
+                  marginLeft: "auto",
+                  marginRight: "auto",
+                }}
+              >
                 <thead>
                   <tr>
-                    <th>Artist ID</th>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Phone Number</th>
-                    <th>Update</th>
-                    <th>Delete</th>
+                    <th className="adminth">Artist ID</th>
+                    <th className="adminth">Name</th>
+                    <th className="adminth">Email</th>
+                    <th className="adminth">Phone Number</th>
+                    <th className="adminth">Update</th>
                   </tr>
                 </thead>
-                {artistlist.map((item) => (
-                  <tbody>
-                    <tr>
-                      <td>{item.artist_id}</td>
-                      <td>{item.artist_name}</td>
-                      <td>{item.email}</td>
-                      <td>{item.phone}</td>
-                      <td>
-                        <Link
-                          to={`/EditArtist/${item.artist_id}`}
-                          style={{ textDecoration: "none" }}
-                        >
-                          Edit
-                        </Link>
-                      </td>
-                      <td>
-                        <button
-                          className="delete-btn"
-                          onClick={() =>
-                            handleRemoveArtist(item.artist_id, item.artist_name)
-                          }
-                        >
-                          Delete
-                        </button>
-                      </td>
-                    </tr>
-                  </tbody>
-                ))}
+                {displayArtist}
               </table>
+              <div style={{ display: "flex", padding: "40px" }}>
+                <ReactPaginate
+                  previousLabel={"Previous"}
+                  nextLabel={"Next"}
+                  pageCount={pageCount}
+                  onPageChange={changePage}
+                  containerClassName={"paginationBttns"}
+                  previousLinkClassName={"previousBttn"}
+                  nextLinkClassName={"nextBttn"}
+                  disabledClassName={"paginationDisabled"}
+                  activeClassName={"paginationActive"}
+                />
+              </div>
             </ArtistTable>
           )}
         </div>

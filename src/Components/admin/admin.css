@@ -21,6 +21,7 @@
   margin-left: 550px;
   color: white;
 }
+
 .delete-btn:hover,
 .edit-btn:hover {
   cursor: pointer;
@@ -30,6 +31,15 @@
   background-color: white;
   border-bottom: none;
 }
+
+.admintable {
+  text-align: center;
+  margin-top: "0%";
+  margin-bottom: "0%";
+  margin-left: "auto";
+  margin-right: "auto";
+}
+
 .updatetext {
   width: 150px;
 }
@@ -68,13 +78,13 @@
   background-color: red;
 }
 
-label {
+.adminlabel {
   color: white;
   text-align: center;
-  margin-left: 110px;
+  margin-left: 20%;
   font-size: 25px;
 }
-th {
+.adminth {
   width: auto;
   padding: 10px;
   background-color: black;
@@ -82,12 +92,48 @@ th {
   font-size: 16px;
   font-weight: normal;
 }
+.paginationBttns {
+  width: 80%;
+  height: 40px;
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  color: white;
+}
 
-td {
+.paginationBttns a {
+  padding: 10px;
+  margin: 8px;
+  border-radius: 5px;
+  border: 1px solid #62cb6b;
+  background-color: #62cb6b;
+  color: white;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.paginationBttns a:hover {
+  color: white;
+  background-color: #62cb6b;
+}
+
+.paginationActive a {
+  color: white;
+  text-decoration: none;
+  background-color: #62cb6b;
+}
+
+.paginationDisabled a {
+  color: white;
+  text-decoration: none;
+  background-color: #62cb6b;
+}
+.admintd {
   width: auto;
   padding: 10px;
-  text-align: left;
-  background-color: darkgrey;
+
+  text-align: center;
+  background-color: lightgrey;
 }
 .img-holder {
   margin: auto;

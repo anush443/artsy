@@ -91,8 +91,10 @@ const Navbar = () => {
           <Link to="/" style={{ textDecoration: "none", color: "black" }}>
             <Links>Home</Links>
           </Link>
+          <Link to="/" style={{ textDecoration: "none", color: "black" }}>
+            <Links>Artwork</Links>
+          </Link>
 
-          <Links>Artwork</Links>
           <Link
             to="/Exhibition"
             style={{ textDecoration: "none", color: "black" }}

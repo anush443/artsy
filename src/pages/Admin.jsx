@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import AuthContext from "../Store/auth-context";
-import AdminNavbar from "../Components/admin/AdminNavbar";
+import AdminHome from "../Components/admin/AdminHome";
 
 const Logo = styled.h1`
   font-weight: bold;
@@ -40,7 +40,8 @@ const Admin = () => {
 
   return (
     <>
-      <AdminNavbar />
+      {/* <AdminNavbar /> */}
+      <AdminHome />
     </>
   );
 };

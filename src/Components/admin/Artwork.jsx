@@ -65,33 +65,39 @@ const Artwork = () => {
           </button>
         </div>
         <ArtworkTable>
-          <table>
+          <table
+            style={{
+              marginTop: "0%",
+              marginBottom: "0%",
+              marginLeft: "auto",
+              marginRight: "auto",
+            }}
+          >
             <thead>
               <tr>
-                <th>Artwork ID</th>
-                <th>Title</th>
-                <th>Price</th>
-                <th>Category</th>
-                <th>Size</th>
-                <th>Description</th>
-                <th>Artist Name</th>
-                <th>InStock</th>
-                <th>Artwork</th>
-                <th>Change Instock</th>
-                <th>Delete</th>
+                <th className="adminth">Artwork ID</th>
+                <th className="adminth">Title</th>
+                <th className="adminth">Price</th>
+                <th className="adminth">Category</th>
+                <th className="adminth">Size</th>
+                <th className="adminth">Description</th>
+                <th className="adminth">Artist Name</th>
+                <th className="adminth">InStock</th>
+                <th className="adminth">Artwork</th>
+                <th className="adminth">Change Instock</th>
               </tr>
             </thead>
             {artworklist.map((item) => (
               <tbody>
                 <tr>
-                  <td>{item.id}</td>
-                  <td>{item.title}</td>
-                  <td>{item.price}</td>
-                  <td>{item.category}</td>
-                  <td>{item.size}</td>
-                  <td>{item.art_description}</td>
-                  <td>{item.artist_name}</td>
-                  <td>{item.instock}</td>
+                  <td className="admintd">{item.id}</td>
+                  <td className="admintd">{item.title}</td>
+                  <td className="admintd">{item.price}</td>
+                  <td className="admintd">{item.category}</td>
+                  <td className="admintd">{item.size}</td>
+                  <td className="admintd">{item.art_description}</td>
+                  <td className="admintd">{item.artist_name}</td>
+                  <td className="admintd">{item.instock}</td>
                   <td>
                     {" "}
                     <img src={item.img} alt="firebase" className="image-view" />
@@ -109,14 +115,6 @@ const Artwork = () => {
                     </button>
                   </td>
                   {/* <td><Link  to={`/EditArtwork/${item.id}`} style={{ textDecoration: "none" }}>Edit</Link></td>        */}
-                  <td>
-                    <button
-                      className="delete-btn"
-                      onClick={() => handleRemoveArtwork(item.id)}
-                    >
-                      Delete
-                    </button>
-                  </td>
                 </tr>
               </tbody>
             ))}
