@@ -447,9 +447,11 @@ const CheckoutForm = () => {
               cartCtx.items.length > 0 && (
                 <Button onClick={() => handlePayment()}>Confirm and pay</Button>
               )) ||
-              (authCtx.isLoggedIn && exhibitionCtx.exhibitions.length > 0 && (
-                <Button onClick={() => handlePayment()}>Confirm & pay</Button>
-              ))}
+              (customerInfo &&
+                authCtx.isLoggedIn &&
+                exhibitionCtx.exhibitions.length > 0 && (
+                  <Button onClick={() => handlePayment()}>Confirm & pay</Button>
+                ))}
           </Container>
         </Col25>
       </Row>
