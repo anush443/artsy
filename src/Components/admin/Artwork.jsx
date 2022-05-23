@@ -112,7 +112,6 @@ const Artwork = () => {
                     {item.instock ? "Yes" : "Sold Out"}
                   </td>
                   <td>
-                    {" "}
                     <img src={item.img} alt="firebase" className="image-view" />
                   </td>
                   <td>

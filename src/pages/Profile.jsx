@@ -155,7 +155,7 @@ import PaymentsIcon from "@mui/icons-material/Payments";
 import LogoutIcon from "@mui/icons-material/Logout";
 import KeyboardReturnIcon from "@mui/icons-material/KeyboardReturn";
 import Orders from "../Components/Orders";
-import Payments from "../Components/Payments";
+
 import Tickets from "../Components/Tickets";
 import Settings from "../Components/Settings";
 import { Link } from "react-router-dom";
@@ -178,7 +178,7 @@ export default function ClippedDrawer() {
       setMsg("Night");
     }
   }, [getHr]);
-  console.log(msg);
+
   const handleLogout = () => {
     authCtx.logout();
   };
@@ -212,7 +212,7 @@ export default function ClippedDrawer() {
       >
         <Toolbar />
         <Box sx={{ overflow: "auto" }}>
-          <Link to="/" style={{ textDecoration: "none", color: "black" }}>
+          <Link to="/" style={{ textDecoration: "none", color: "#201f1e" }}>
             <List>
               <ListItem button key={"Return to shop"}>
                 <ListItemIcon>
@@ -238,18 +238,7 @@ export default function ClippedDrawer() {
               <ListItemText primary={"Orders"} />
             </ListItem>
           </List>
-          <List>
-            <ListItem
-              onClick={() => setIsActive("Payments")}
-              button
-              key={"Payments"}
-            >
-              <ListItemIcon>
-                <PaymentsIcon />
-              </ListItemIcon>
-              <ListItemText primary={"Payments"} />
-            </ListItem>
-          </List>
+
           <List>
             <ListItem
               onClick={() => setIsActive("Tickets")}
@@ -291,7 +280,7 @@ export default function ClippedDrawer() {
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <Toolbar />
         {isActive === "Orders" && <Orders />}
-        {isActive === "Payments" && <Payments />}
+
         {isActive === "Tickets" && <Tickets />}
         {isActive === "Settings" && <Settings />}
       </Box>

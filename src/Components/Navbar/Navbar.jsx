@@ -13,8 +13,14 @@ import AuthContext from "../../Store/auth-context";
 import ExhibitionCartContext from "../../Store/ExhibitionCart-context";
 
 const Container = styled.div`
-  height: 60px;
-  ${mobile({ height: "50px" })}
+  height: 70px;
+  background: #201f1e;
+  color: white;
+  -webkit-box-shadow: 10px 10px 5px -4px rgba(0,0,0,0.39);
+-moz-box-shadow: 10px 10px 5px -4px rgba(0,0,0,0.39);
+box-shadow: 10px 10px 5px -4px rgba(0,0,0,0.39);
+Copy Text
+  ${mobile({ height: "50px" })};
 `;
 
 const Wrapper = styled.div`
@@ -85,19 +91,21 @@ const Navbar = () => {
     <Container>
       <Wrapper>
         <Left>
-          <Logo>ArtSy.</Logo>
+          <Link to="/" style={{ textDecoration: "none", color: "white" }}>
+            <Logo>ArtSy.</Logo>
+          </Link>
         </Left>
         <Center>
-          <Link to="/" style={{ textDecoration: "none", color: "black" }}>
+          <Link to="/" style={{ textDecoration: "none", color: "white" }}>
             <Links>Home</Links>
           </Link>
-          <Link to="/" style={{ textDecoration: "none", color: "black" }}>
+          <Link to="/" style={{ textDecoration: "none", color: "white" }}>
             <Links>Artwork</Links>
           </Link>
 
           <Link
             to="/Exhibition"
-            style={{ textDecoration: "none", color: "black" }}
+            style={{ textDecoration: "none", color: "white" }}
           >
             <Links>Exhibition</Links>
           </Link>
@@ -106,7 +114,7 @@ const Navbar = () => {
           {!isLoggedIn && (
             <Link
               to="/login"
-              style={{ textDecoration: "none", color: "black" }}
+              style={{ textDecoration: "none", color: "white" }}
             >
               <MenuItem>SignIn</MenuItem>
             </Link>
@@ -114,13 +122,13 @@ const Navbar = () => {
           {!isLoggedIn && (
             <Link
               to="/register"
-              style={{ textDecoration: "none", color: "black" }}
+              style={{ textDecoration: "none", color: "white" }}
             >
               <MenuItem>Register</MenuItem>
             </Link>
           )}
 
-          <Link to="/cart" style={{ textDecoration: "none", color: "black" }}>
+          <Link to="/cart" style={{ textDecoration: "none", color: "white" }}>
             <MenuItem>
               <Badge badgeContent={numberOfCartItems} color="primary">
                 <ShoppingCartOutlined />
@@ -130,7 +138,7 @@ const Navbar = () => {
           {isLoggedIn && authCtx.isAdmin === 1 && (
             <Link
               to="/admin"
-              style={{ textDecoration: "none", color: "black" }}
+              style={{ textDecoration: "none", color: "white" }}
             >
               <MenuItem>
                 Hi {authCtx.userName}
@@ -141,7 +149,7 @@ const Navbar = () => {
           {isLoggedIn && !authCtx.isAdmin && (
             <Link
               to="/profile"
-              style={{ textDecoration: "none", color: "black" }}
+              style={{ textDecoration: "none", color: "white" }}
             >
               <MenuItem>
                 Hi {authCtx.userName}
@@ -150,7 +158,7 @@ const Navbar = () => {
             </Link>
           )}
           {isLoggedIn && (
-            <Link to="/" style={{ textDecoration: "none", color: "black" }}>
+            <Link to="/" style={{ textDecoration: "none", color: "white" }}>
               <MenuItem onClick={handleLogout}>Log out</MenuItem>
             </Link>
           )}
