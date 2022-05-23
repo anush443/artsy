@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 import styled from "styled-components";
 import AuthContext from "../Store/auth-context";
@@ -13,6 +13,8 @@ import * as yup from "yup";
 import ExhibitionCartContext from "../Store/ExhibitionCart-context";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Row = styled.div`
   display: -ms-flexbox; /* IE10 */
@@ -79,12 +81,12 @@ const Price = styled.div`
   font-weight: bold;
 `;
 const Button = styled.button`
+  width: 40%;
   background-color: black;
   color: white;
   padding: 12px;
   margin: 10px 0;
   border: none;
-  width: 100%;
   border-radius: 3px;
   cursor: pointer;
   font-size: 17px;
@@ -93,7 +95,7 @@ const Button = styled.button`
   }
 `;
 
-const paymentHelper = (paymentType, amount, authCtx, exhibitionCtx) => {
+const paymentHelper = (paymentType, amount, authCtx) => {
   axios
     .post(
       `http://localhost:5000/api/payment/${authCtx.id}`,
@@ -123,17 +125,27 @@ const paymentHelper = (paymentType, amount, authCtx, exhibitionCtx) => {
       alert("Payment failed");
     });
 };
-
+const phoneRegExp =
+  /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
 const schema = yup.object().shape({
+  fullName: yup.string().min(4).max(40).required("Full is required"),
   email: yup.string().email().required("Email is required"),
-  userName: yup.string().min(4).max(8).required(),
-  password: yup.string().min(4).max(15).required(),
-  confirmPassword: yup.string().oneOf([yup.ref("password"), null]),
+  address: yup.string().min(5).max(199).required(),
+  city: yup.string().min(5).max(44).required(),
+  state: yup.string().min(5).max(44).required(),
+  zipcode: yup.number().required("Zipcode is required"),
+  mobile: yup.string().matches(phoneRegExp, "Phone number is not valid"),
 });
+
+const notify = (message) => toast(message);
+
 const CheckoutForm = () => {
+  const [customerInfo, setCustomerInfo] = useState("");
+
   const { register, handleSubmit, errors } = useForm({
     resolver: yupResolver(schema),
   });
+
   const cartCtx = useContext(CartContext);
   const authCtx = useContext(AuthContext);
   const exhibitionCtx = useContext(ExhibitionCartContext);
@@ -141,11 +153,69 @@ const CheckoutForm = () => {
   const totalAmount = cartCtx.totalAmount + exhibitionCtx.totalAmount;
   const navigate = useNavigate();
 
+  useEffect(() => {
+    const getCustomerInfo = async () => {
+      try {
+        const info = await axios.get(
+          `http://localhost:5000/api/customer/${authCtx.id}`,
+          {
+            headers: {
+              Authorization: "Bearer " + authCtx.token,
+            },
+          }
+        );
+        if (info.data.length > 0) {
+          setCustomerInfo(...info.data);
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    };
+    getCustomerInfo();
+  }, [authCtx.id]);
+
+  const submitForm = (data) => {
+    if (!customerInfo) {
+      const customer = {
+        ...data,
+        id: authCtx.id,
+      };
+      axios
+        .post(`http://localhost:5000/api/customer`, customer, {
+          headers: {
+            Authorization: "Bearer " + authCtx.token,
+          },
+        })
+        .then((res) => {
+          if (res.data.message) {
+            window.location.reload();
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } else {
+      axios
+        .put(`http://localhost:5000/api/customer/update/${authCtx.id}`, data, {
+          headers: {
+            Authorization: "Bearer " + authCtx.token,
+          },
+        })
+        .then((res) => {
+          if (res.data.message) {
+            window.location.reload();
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  };
+
   let paymentType;
   //only artworks
   if (cartCtx.items.length > 0 && exhibitionCtx.exhibitions.length === 0) {
     paymentType = 0;
-    console.log(paymentType);
   }
 
   //only exhibitions
@@ -161,13 +231,13 @@ const CheckoutForm = () => {
 
   const handlePayment = () => {
     if (paymentType === 0) {
-      paymentHelper(paymentType, totalAmount, authCtx, exhibitionCtx);
+      paymentHelper(paymentType, totalAmount, authCtx);
       navigate("/profile");
     } else if (paymentType === 1) {
-      paymentHelper(paymentType, totalAmount, authCtx, exhibitionCtx);
+      paymentHelper(paymentType, totalAmount, authCtx);
       navigate("/profile");
     } else {
-      paymentHelper(paymentType, totalAmount, authCtx, exhibitionCtx);
+      paymentHelper(paymentType, totalAmount, authCtx);
       navigate("/profile");
     }
   };
@@ -179,50 +249,75 @@ const CheckoutForm = () => {
       <Row>
         <Col75>
           <Container>
-            <Form>
+            <Form onSubmit={handleSubmit(submitForm)}>
               <Row>
                 <Col50>
                   <h3>Billing Address</h3>
-                  <Label hmtlFor="fname">
-                    <PersonIcon />
-                    Full Name
-                  </Label>
-                  <Input
-                    type="text"
-                    id="fname"
-                    name="firstname"
-                    placeholder="John M. Doe"
-                  />
-                  <Label hmtlFor="email">
-                    <EmailIcon />
-                    Email
-                  </Label>
-                  <Input
-                    type="text"
-                    id="email"
-                    name="email"
-                    placeholder="john@example.com"
-                  />
-                  <Label hmtlFor="adr">
-                    <HomeIcon />
-                    Address
-                  </Label>
-                  <Input
-                    type="text"
-                    id="adr"
-                    name="address"
-                    placeholder="542 W. 15th Street"
-                  />
-                  <Label htmlFor="city">
-                    <LocationCityIcon />
-                    City
-                  </Label>
-                  <Input
-                    type="text"
-                    id="city"
-                    name="city"
-                    placeholder="New York"
-                  />
+                  <Row>
+                    <Col50>
+                      <Label hmtlFor="fname">
+                        <PersonIcon />
+                        Full Name
+                      </Label>
+                      <Input
+                        type="text"
+                        id="fname"
+                        name="fullName"
+                        placeholder="John M. Doe"
+                        defaultValue={customerInfo?.name}
+                        ref={register}
+                      />
+
+                      {errors.fullName?.message}
+                    </Col50>
+                    <Col50>
+                      <Label hmtlFor="email">
+                        <EmailIcon />
+                        Email
+                      </Label>
+                      <Input
+                        type="text"
+                        id="email"
+                        name="email"
+                        placeholder="john@example.com"
+                        defaultValue={customerInfo?.email}
+                        ref={register}
+                      />
+                      {errors.email?.message}
+                    </Col50>
+                  </Row>
+                  <Row>
+                    <Col50>
+                      <Label hmtlFor="adr">
+                        <HomeIcon />
+                        Address
+                      </Label>
+                      <Input
+                        type="text"
+                        id="adr"
+                        name="address"
+                        placeholder="542 W. 15th Street"
+                        defaultValue={customerInfo?.address}
+                        ref={register}
+                      />
+                      {errors.address?.message}
+                    </Col50>
+                    <Col50>
+                      <Label htmlFor="city">
+                        <LocationCityIcon />
+                        City
+                      </Label>
+                      <Input
+                        type="text"
+                        id="city"
+                        name="city"
+                        placeholder="New York"
+                        defaultValue={customerInfo?.city}
+                        ref={register}
+                      />
+                      {errors.city?.message}
+                    </Col50>
+                  </Row>
 
                   <Row>
                     <Col50>
@@ -232,21 +327,44 @@ const CheckoutForm = () => {
                         id="state"
                         name="state"
                         placeholder="NY"
+                        defaultValue={customerInfo?.state}
+                        ref={register}
                       />
+                      {errors.state?.message}
                     </Col50>
                     <Col50>
-                      <Label htmlFor="zip">Zip</Label>
+                      <Label htmlFor="zipcode">Zipcode</Label>
                       <Input
-                        type="text"
+                        type="number"
                         id="zip"
-                        name="zip"
+                        name="zipcode"
                         placeholder="10001"
+                        defaultValue={customerInfo?.zipcode}
+                        ref={register}
                       />
+                      {errors.zipcode?.message}
                     </Col50>
                   </Row>
+                  <Row>
+                    <Col50>
+                      <Label htmlFor="mobile">Mobile</Label>
+                      <Input
+                        style={{ width: "50%" }}
+                        type="number"
+                        id="mobile"
+                        name="mobile"
+                        placeholder="9190770050"
+                        defaultValue={customerInfo?.mobile}
+                        ref={register}
+                      />
+                      {errors.mobile?.message}
+                    </Col50>
+                  </Row>
+
+                  <Button>{!customerInfo ? "Submit" : "Update Details"}</Button>
                 </Col50>
 
-                <Col50>
+                {/* <Col50>
                   <h3>Payment</h3>
                   <Label htmlFor="fname">Accepted Cards</Label>
                   <IconContainer>
@@ -293,7 +411,7 @@ const CheckoutForm = () => {
                       />
                     </Col50>
                   </Row>
-                </Col50>
+                </Col50> */}
               </Row>
             </Form>
           </Container>
@@ -324,9 +442,11 @@ const CheckoutForm = () => {
             <p>
               Total <Price>{totalAmount}</Price>
             </p>
-            {(authCtx.isLoggedIn && cartCtx.items.length > 0 && (
-              <Button onClick={() => handlePayment()}>Confirm and pay</Button>
-            )) ||
+            {(customerInfo &&
+              authCtx.isLoggedIn &&
+              cartCtx.items.length > 0 && (
+                <Button onClick={() => handlePayment()}>Confirm and pay</Button>
+              )) ||
               (authCtx.isLoggedIn && exhibitionCtx.exhibitions.length > 0 && (
                 <Button onClick={() => handlePayment()}>Confirm & pay</Button>
               ))}

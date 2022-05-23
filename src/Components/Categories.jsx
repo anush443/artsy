@@ -10,8 +10,9 @@ const Header = styled.h1`
 const Container = styled.div`
   padding: 10px;
   margin-top: 50px;
+  margin: auto;
   z-index: 0;
-  width: 100%;
+  width: 80%;
   display: flex;
   justify-content: space-evenly;
   flex-wrap: wrap;

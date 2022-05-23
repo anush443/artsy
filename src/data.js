@@ -27,38 +27,38 @@ export const categories = [
     id: 1,
     img: "/Assests/categories/landscape.jpg",
     title: "Landscape_img",
-    cat: "landscape",
+    cat: "Landscape",
   },
 
   {
     id: 2,
     img: "/Assests/categories/potrait.jpg",
     title: "Potrait_img",
-    cat: "potrait",
+    cat: "Potrait",
   },
   {
     id: 3,
     img: "/Assests/categories/urban.jpg",
     title: "Urban_img",
-    cat: "urban",
+    cat: "Urban",
   },
   {
     id: 4,
     img: "/Assests/categories/pop culture.jpeg",
     title: "Pop Culture_img",
-    cat: "popculture",
+    cat: "Popculture",
   },
   {
     id: 5,
     img: "/Assests/categories/everyday life.jpg",
     title: "Everyday Life_img",
-    cat: "abstract",
+    cat: "Abstract",
   },
   {
     id: 6,
     img: "/Assests/categories/street art.jpg",
     title: "Street Art_img",
-    cat: "streetart",
+    cat: "Streetart",
   },
 ];
 

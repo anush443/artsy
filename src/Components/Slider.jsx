@@ -4,7 +4,7 @@ import styled from "styled-components";
 
 const Image = styled.img`
   width: 100%;
-  height: 80vh;
+  height: 92vh;
 `;
 
 const Slider = () => {

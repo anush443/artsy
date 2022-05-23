@@ -55,7 +55,7 @@ const AddPaintings = () => {
   const { register, handleSubmit, errors } = useForm({
     resolver: yupResolver(schema),
   });
-  const [Id, setid] = useState("");
+
   const [Title, settitle] = useState("");
   const [Price, setprice] = useState("");
   const [Category, setcategory] = useState("");
@@ -93,7 +93,6 @@ const AddPaintings = () => {
       "http://localhost:5000/api/artworks/addartwork",
       {
         artist_id: ArtistID,
-        id: Id,
         price: Price,
         category: Category,
         img: ImagePath,
@@ -176,17 +175,6 @@ const AddPaintings = () => {
           <br></br>
           <input
             type="text"
-            name="id"
-            className="admininput"
-            placeholder="Artwork ID"
-            onChange={(e) => {
-              setid(e.target.value);
-            }}
-            ref={register}
-          />
-          <p> {errors.Id?.message} </p>
-          <input
-            type="text"
             name="Title"
             placeholder="Artwork Title"
             className="admininput"
@@ -219,10 +207,10 @@ const AddPaintings = () => {
               Category
             </option>
             <option value="Abstract">Abstract</option>
-            <option value="Everyday Life">Everyday Life</option>
+            <option value="Popculture">Pop Culture</option>
             <option value="Potrait">Potrait</option>
-            <option value="Street Art">Street Art</option>
-            <option value="Nature">Nature</option>
+            <option value="Streetart">Street Art</option>
+            <option value="Landscape">Landscape</option>
             <option value="Urban">Urban</option>
           </select>
           <p> {errors.Category?.message} </p>

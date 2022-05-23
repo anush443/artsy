@@ -40,10 +40,21 @@ const Artwork = () => {
     });
   };
   const handleEditArtwork = (id, instock) => {
-    Axios.post(`http://localhost:7000/api/updateInstock`, {
-      id: id,
-      instock: instock,
-    }).then(() => {});
+    if (instock === 1) {
+      instock = 0;
+    } else {
+      instock = 1;
+    }
+
+    Axios.put(
+      `http://localhost:5000/api/artworks/update/${id}`,
+      { instock: instock },
+      {
+        headers: {
+          Authorization: "Bearer " + authCtx.token,
+        },
+      }
+    ).then(() => {});
   };
 
   return (
@@ -84,7 +95,7 @@ const Artwork = () => {
                 <th className="adminth">Artist Name</th>
                 <th className="adminth">InStock</th>
                 <th className="adminth">Artwork</th>
-                <th className="adminth">Change Instock</th>
+                <th className="adminth">Update stock</th>
               </tr>
             </thead>
             {artworklist.map((item) => (
@@ -97,7 +108,9 @@ const Artwork = () => {
                   <td className="admintd">{item.size}</td>
                   <td className="admintd">{item.art_description}</td>
                   <td className="admintd">{item.artist_name}</td>
-                  <td className="admintd">{item.instock}</td>
+                  <td className="admintd">
+                    {item.instock ? "Yes" : "Sold Out"}
+                  </td>
                   <td>
                     {" "}
                     <img src={item.img} alt="firebase" className="image-view" />
