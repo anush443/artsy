@@ -30,6 +30,10 @@ import Artist from "./Components/admin/Artist";
 import ArtworkTable from "./Components/admin/Artwork";
 import EditArtist from "./Components/admin/EditArtist";
 import Events from "./Components/admin/Events";
+import OrderList from "./Components/admin/OrderList";
+import PaymentList from "./Components/admin/PaymentList";
+import EditArtwork from "./Components/admin/EditArtwork";
+import EditEvents from "./Components/admin/EditEvents";
 
 function App() {
   const authCtx = useContext(AuthContext);
@@ -124,10 +128,20 @@ function App() {
               }
             />
             <Route
-              path="/artwork"
+              path="/admin/artworks"
               element={
                 authCtx.isAdmin ? (
                   <ArtworkTable />
+                ) : (
+                  <Navigate to="/login" replace />
+                )
+              }
+            />
+            <Route
+              path="/editartwork/:art_id"
+              element={
+                authCtx.isAdmin ? (
+                  <EditArtwork />
                 ) : (
                   <Navigate to="/login" replace />
                 )
@@ -140,10 +154,41 @@ function App() {
               }
             />
             <Route
-              path="/addvent"
+              path="/addevent"
               element={
                 authCtx.isAdmin ? (
                   <AddEvent />
+                ) : (
+                  <Navigate to="/login" replace />
+                )
+              }
+            />
+            <Route
+              path="/editevents/:id"
+              element={
+                authCtx.isAdmin ? (
+                  <EditEvents />
+                ) : (
+                  <Navigate to="/login" replace />
+                )
+              }
+            />
+
+            <Route
+              path="/orderlist"
+              element={
+                authCtx.isAdmin ? (
+                  <OrderList />
+                ) : (
+                  <Navigate to="/login" replace />
+                )
+              }
+            />
+            <Route
+              path="/paymentlist"
+              element={
+                authCtx.isAdmin ? (
+                  <PaymentList />
                 ) : (
                   <Navigate to="/login" replace />
                 )

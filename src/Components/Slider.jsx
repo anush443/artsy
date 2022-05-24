@@ -24,21 +24,21 @@ const Slider = () => {
         <Carousel.Item interval={3000}>
           <Image
             className="d-block w-100"
-            src="https://images.pexels.com/photos/20967/pexels-photo.jpg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+            src="https://images.pexels.com/photos/3004909/pexels-photo-3004909.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
             alt="Second slide"
           />
           <Carousel.Caption>
-            <h1>Elevate your world ith unique Art & Design</h1>
+            <h1>Elevate your world with unique Art & Design</h1>
           </Carousel.Caption>
         </Carousel.Item>
         <Carousel.Item interval={3000}>
           <Image
             className="d-block w-100"
-            src="https://images.pexels.com/photos/2574476/pexels-photo-2574476.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+            src="https://images.pexels.com/photos/2087708/pexels-photo-2087708.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
             alt="Third slide"
           />
           <Carousel.Caption>
-            <h1>Elevate your world ith unique Art & Design</h1>
+            <h1>Elevate your world with unique Art & Design</h1>
           </Carousel.Caption>
         </Carousel.Item>
       </Carousel>

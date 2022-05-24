@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import AdminNavbar from "./AdminNavbar";
-import { Link, Navigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 import Axios from "axios";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { storage } from "./firebase/firebase";
-import "./admin.css";
+import AuthContext from "../../Store/auth-context";
 
 const Form = styled.div`
   background-color: black;
@@ -17,7 +17,7 @@ const Form = styled.div`
   top: 14%;
   font-size: 18px;
   height: 1050px;
-  margin-left: 25%;
+  margin-left: 10%;
   border: 1px solid black;
   border-radius: 10px;
   display: inline-block;
@@ -34,17 +34,20 @@ const Buttoncontainer = styled.div`
   margin-top: 20px;
 `;
 const schema = yup.object().shape({
-  name: yup.string().required("*required "),
-  price: yup.number().min(100).required("*required"),
-  description: yup.string().required("*required"),
-  limit: yup.number().min(10).required("*required"),
-  imagepath: yup.string().required("*required"),
-  enddate: yup.date().required("*required"),
-  startdate: yup.date().required("*required"),
+  Eventname: yup.string().required("*required"),
+  Eventprice: yup.number().typeError("* required").min(100),
+  Eventdescription: yup.string().required("*required"),
+  Eventlimit: yup.number().typeError("* required").min(10),
+  Eventimagepath: yup.string().required("*required"),
+  Eventenddate: yup.date().typeError("* required"),
+  Eventstartdate: yup.date().typeError("* required"),
 });
-// startdate:yup.date().required(),
 
 const AddEvent = () => {
+  const { register, handleSubmit, errors } = useForm({
+    resolver: yupResolver(schema),
+  });
+
   const [name, setname] = useState("");
   const [price, setprice] = useState("");
   const [description, setdescription] = useState("");
@@ -52,29 +55,30 @@ const AddEvent = () => {
   const [enddate, setenddate] = useState("");
   const [limit, setlimit] = useState("");
   const [imagepath, setimagepath] = useState("");
-  // let navigate = useNavigate();
+  const authCtx = useContext(AuthContext);
 
-  const { register, handleSubmit, errors } = useForm({
-    resolver: yupResolver(schema),
-  });
   const submitForm = (data) => {
     console.log(data);
-    //alert(name);
-    Axios.post("http://localhost:7000/api/addEvent", {
-      ename: name,
-      eprice: price,
-      edescription: description,
-      estartdate: startdate,
-      eenddate: enddate,
-      elimit: limit,
-      eimagepath: imagepath,
-    }).then(() => {
+
+    Axios.post(
+      "http://localhost:5000/api/exhibitions/addexhibitions",
+      {
+        ename: name,
+        eprice: price,
+        edescription: description,
+        estartdate: startdate,
+        eenddate: enddate,
+        elimit: limit,
+        eimagepath: imagepath,
+      },
+      {
+        headers: {
+          Authorization: "Bearer " + authCtx.token,
+        },
+      }
+    ).then(() => {
       alert("Event Added Successfully ...");
-      //  window.location.reload(false);
-      // window.location.reload(false);
-      // let path = `/Events`;
-      // navigate(path);
-      <Navigate to="/Events"></Navigate>;
+      window.location.reload(false);
     });
   };
 
@@ -121,92 +125,92 @@ const AddEvent = () => {
 
   return (
     <>
-      <div style={{ display: "flex" }}>
-        <AdminNavbar></AdminNavbar>
+      <AdminNavbar></AdminNavbar>
+      <div style={{ display: "flex", marginLeft: "200px" }}>
         <h3 style={{ padding: "20px", marginLeft: "10px" }}>
           EVENT INFORMATION
         </h3>
-        <button className="btn">
+        <button className="btn" style={{ marginLeft: "60%", float: "right" }}>
           <Link to="/Events" style={{ color: "white", textDecoration: "none" }}>
             <span>View</span>
           </Link>
         </button>
         <Form>
-          <form onSubmit={() => handleSubmit(submitForm())}>
+          <form onSubmit={handleSubmit(submitForm)}>
             <label className="adminlabel">INFORMATION</label> <br></br>
             <br></br>
             <input
               type="text"
-              name="ename"
+              name="Eventname"
+              className="admininput"
               placeholder="Event Name"
               ref={register}
-              className="admininput"
               onChange={(e) => {
                 setname(e.target.value);
               }}
             />
-            <p> {errors.ename?.message} </p>
+            <p> {errors.Eventname?.message} </p>
             <input
               type="number"
-              name="eprice"
+              name="Eventprice"
+              className="admininput"
               placeholder="Price"
               ref={register}
-              className="admininput"
               onChange={(e) => {
                 setprice(e.target.value);
               }}
             />
-            <p> {errors.eprice?.message} </p>
+            <p> {errors.Eventprice?.message} </p>
             <input
               type="text"
-              name="edescription"
+              name="Eventdescription"
+              className="admininput"
               placeholder="Description"
               ref={register}
-              className="admininput"
               onChange={(e) => {
                 setdescription(e.target.value);
               }}
             />
-            <p> {errors.edescription?.message} </p>
+            <p> {errors.Eventdescription?.message} </p>
             <input
               type="date"
+              name="Eventstartdate"
+              className="admininput"
               style={{ backgroundColor: "white", color: "black" }}
-              name="estartdate"
               placeholder="Start Date"
               ref={register}
-              className="admininput"
               onChange={(e) => {
                 setstartdate(e.target.value);
               }}
             />
-            <p> {errors.estartdate?.message} </p>
+            <p> {errors.Eventstartdate?.message} </p>
             <input
               type="date"
+              name="Eventenddate"
+              className="admininput"
               style={{ backgroundColor: "white", color: "black" }}
-              name="eenddate"
               placeholder="End Date"
               ref={register}
-              className="admininput"
               onChange={(e) => {
                 setenddate(e.target.value);
               }}
             />
-            <p> {errors.eenddate?.message} </p>
+            <p> {errors.Eventenddate?.message} </p>
             <input
               type="number"
-              name="elimit"
+              className="admininput"
+              name="Eventlimit"
               placeholder="Ticket Limit"
               ref={register}
-              className="admininput"
               onChange={(e) => {
                 setlimit(e.target.value);
               }}
             />
-            <p> {errors.elimit?.message} </p>
+            <p> {errors.Eventlimit?.message} </p>
             <input
               type="text"
-              name="eimagepath"
               className="admininput"
+              name="Eventimagepath"
               placeholder="Image Path"
               ref={register}
               value={url}
@@ -214,7 +218,7 @@ const AddEvent = () => {
                 setimagepath(e.target.value);
               }}
             />
-            <p> {errors.eimagepath?.message} </p>
+            <p> {errors.Eventimagepath?.message} </p>
             <input type="submit" class="nbtn" id="Submit" />
           </form>
           <Container_img>
@@ -225,14 +229,12 @@ const AddEvent = () => {
               type="file"
               accept="image/*"
               id="input"
-              className="admininput"
               onChange={(e) => imageHandler(e)}
             />
             <Buttoncontainer>
-              <label className="adminlabel" htmlFor="input">
+              <label htmlFor="input">
                 <i class="nbtn">Choose Image</i>
               </label>
-
               <button
                 class="nbtn"
                 style={{ marginTop: "20px", width: "350px" }}

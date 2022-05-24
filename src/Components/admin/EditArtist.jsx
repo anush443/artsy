@@ -18,7 +18,7 @@ const Form = styled.div`
   top: 14%;
   font-size: 18px;
   height: auto;
-  margin-left: 450px;
+  margin-left: 40%;
   border: 1px solid black;
   border-radius: 10px;
   display: inline-block;
@@ -96,8 +96,9 @@ const EditArtist = () => {
 
   return (
     <>
-      <div style={{ display: "flex" }}>
-        <AdminNavbar></AdminNavbar>
+     <AdminNavbar></AdminNavbar>
+      <div style={{ display: "flex",marginLeft: "200px" }}>
+       
         <h3 style={{ padding: "20px", marginLeft: "10px" }}>
           ARTIST INFORMATION
         </h3>

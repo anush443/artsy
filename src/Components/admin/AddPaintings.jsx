@@ -43,7 +43,7 @@ styled.p`
 
 const schema = yup.object().shape({
   Title: yup.string().required("* required "),
-  Price: yup.number().min(0).required("* required"),
+  Price: yup.number().typeError("* required").min(0),
   Category: yup.string().required("* required"),
   Size: yup.string().required("* required"),
   ImagePath: yup.string().required("* required"),
@@ -55,7 +55,7 @@ const AddPaintings = () => {
   const { register, handleSubmit, errors } = useForm({
     resolver: yupResolver(schema),
   });
-
+  // const [Id, setid] = useState("");
   const [Title, settitle] = useState("");
   const [Price, setprice] = useState("");
   const [Category, setcategory] = useState("");
@@ -93,6 +93,7 @@ const AddPaintings = () => {
       "http://localhost:5000/api/artworks/addartwork",
       {
         artist_id: ArtistID,
+        //  id: Id,
         price: Price,
         category: Category,
         img: ImagePath,
@@ -155,14 +156,14 @@ const AddPaintings = () => {
 
   return (
     <>
-      <div style={{ display: "flex" }}>
-        <AdminNavbar></AdminNavbar>
+      <AdminNavbar></AdminNavbar>
+      <div style={{ display: "flex", marginLeft: "200px" }}>
         <h3 style={{ padding: "20px", marginLeft: "10px" }}>
           ARTWORK INFORMATION
         </h3>
-        <button className="btn">
+        <button className="btn" style={{ marginLeft: "60%", float: "right" }}>
           <Link
-            to="/Artwork"
+            to="/admin/artworks"
             style={{ color: "white", textDecoration: "none" }}
           >
             <span>View</span>
@@ -173,6 +174,17 @@ const AddPaintings = () => {
         <form onSubmit={handleSubmit(submitForm)}>
           <label className="adminlabel">INFORMATION</label> <br></br>
           <br></br>
+          {/* <input
+            type="text"
+            name="id"
+            className="admininput"
+            placeholder="Artwork ID"
+            onChange={(e) => {
+              setid(e.target.value);
+            }}
+            ref={register}
+          /> */}
+          <p> {errors.Id?.message} </p>
           <input
             type="text"
             name="Title"
@@ -206,12 +218,12 @@ const AddPaintings = () => {
             <option value="" selected>
               Category
             </option>
-            <option value="Abstract">Abstract</option>
-            <option value="Popculture">Pop Culture</option>
-            <option value="Potrait">Potrait</option>
-            <option value="Streetart">Street Art</option>
-            <option value="Landscape">Landscape</option>
-            <option value="Urban">Urban</option>
+            <option value="landscape">Landscape</option>
+            <option value="potrait">Potrait</option>
+            <option value="urban">Urban</option>
+            <option value="popculture">Pop Culture</option>
+            <option value="abstract">Abstract</option>
+            <option value="streetart">Street Art</option>
           </select>
           <p> {errors.Category?.message} </p>
           <select

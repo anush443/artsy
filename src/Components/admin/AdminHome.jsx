@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useState, useEffect, useContext } from "react";
 import AdminNavbar from "./AdminNavbar";
 import styled from "styled-components";
+import AuthContext from "../../Store/auth-context";
+import Axios from "axios";
 
 const ImageBanner = styled.img`
   width: 100%;
@@ -42,11 +44,47 @@ const Number = styled.h4`
   text-weight: lighter;
 `;
 const AdminHome = () => {
+  const [countuser, setCountuser] = useState(0);
+  const [artworksSold, SetArtworksSold] = useState(0);
+  const authCtx = useContext(AuthContext);
+
+  useEffect(() => {
+    const getCount = async () => {
+      try {
+        const res = await Axios.get(`http://localhost:5000/api/users/stats`, {
+          headers: {
+            Authorization: "Bearer " + authCtx.token,
+          },
+        });
+
+        setCountuser(res.data);
+      } catch {}
+    };
+    getCount();
+  }, [authCtx.token]);
+
+  useEffect(() => {
+    const getSoldpainting = async () => {
+      try {
+        const res = await Axios.get(
+          `http://localhost:5000/api/orders/artworkssold`,
+          {
+            headers: {
+              Authorization: "Bearer " + authCtx.token,
+            },
+          }
+        );
+
+        SetArtworksSold(res.data);
+      } catch {}
+    };
+    getSoldpainting();
+  }, [authCtx.token]);
+
   return (
     <>
       <Conatainer>
         <AdminNavbar />
-
         <ImageBanner src="https://images.pexels.com/photos/1572386/pexels-photo-1572386.jpeg?cs=srgb&dl=pexels-steve-johnson-1572386.jpg&fm=jpg"></ImageBanner>
         <Heading>
           <Text>Happy ArtSy</Text>
@@ -55,11 +93,11 @@ const AdminHome = () => {
       <div style={{ padding: "5%", display: "flex", marginLeft: "150px" }}>
         <DCard>
           <Name>Total Users</Name>
-          <Number>3000</Number>
+          <Number>{countuser}</Number>
         </DCard>
         <DCard>
-          <Name>Painting Sold this Week</Name>
-          <Number>10</Number>
+          <Name>Painting Sold </Name>
+          <Number>{artworksSold}</Number>
         </DCard>
       </div>
       {/* <PaintingImage></PaintingImage> */}

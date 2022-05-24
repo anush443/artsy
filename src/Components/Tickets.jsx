@@ -29,7 +29,7 @@ const Title = styled.h1`
 const convertDate = (date) => {
   const validDate = new Date(date);
   const day = validDate.getDate();
-  const month = validDate.getMonth();
+  const month = validDate.getMonth() + 1;
   const year = validDate.getFullYear();
   return day + "/" + month + "/" + year;
 };

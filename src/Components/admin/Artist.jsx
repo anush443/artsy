@@ -14,8 +14,7 @@ const ArtistTable = styled.div`
   alignitems: center;
 `;
 const Conatainer = styled.div`
-  display: flex;
-  content-align: right;
+margin-left: 200px;
 `;
 const Artist = () => {
   const [tableshow, settableShow] = useState(true);
@@ -58,7 +57,7 @@ const Artist = () => {
             <td className="admintd">
               <Link
                 to={`/EditArtist/${item.artist_id}`}
-                style={{ textDecoration: "none" }}
+                style={{ textDecoration: "none" ,color:"black"}}
               >
                 <EditIcon />
               </Link>
@@ -78,9 +77,9 @@ const Artist = () => {
 
   return (
     <>
-      <Conatainer>
-        <AdminNavbar />
+     <AdminNavbar />
 
+      <Conatainer>       
         <div
           style={{
             display: "inline-block",
@@ -92,7 +91,7 @@ const Artist = () => {
             <h3 style={{ padding: "20px", marginLeft: "10px" }}>
               ARTIST INFORMATION
             </h3>
-            <button
+            <button style={{marginLeft:"60%",float: "right" }}
               onClick={() => settableShow((prev) => !prev)}
               className="btn"
             >
@@ -115,12 +114,21 @@ const Artist = () => {
                     <th className="adminth">Name</th>
                     <th className="adminth">Email</th>
                     <th className="adminth">Phone Number</th>
-                    <th className="adminth">Update</th>
+                    <th className="adminth">Edit</th>
                   </tr>
                 </thead>
                 {displayArtist}
               </table>
-              <div style={{ display: "flex", padding: "40px" }}>
+              <div style={{ 
+                             
+                  position: "absolute",
+                  bottom: "0px",
+                  marginTop: "0%",
+                  marginBottom: "0%",
+                  marginLeft: "30%",
+                  marginRight: "auto",
+                                 
+              }}>
                 <ReactPaginate
                   previousLabel={"Previous"}
                   nextLabel={"Next"}

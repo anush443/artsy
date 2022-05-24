@@ -16,8 +16,8 @@ const Box = styled.div`
   margin-left: 10%;
   display: flex;
 `;
-const Bar = styled.hr`
-  width: 200px;
+const Bar = styled.div`
+  padding: 15px;
   margin-left: 46%;
 `;
 const Exhibitions = () => {
@@ -39,7 +39,7 @@ const Exhibitions = () => {
     <>
       <Navbar />
       <Bar />
-      <Container>EXHIBITIONS</Container>
+      <Container>Exhibitions</Container>
       <Bar />
       <Box>
         {exhibitions.map((exhibition) => (

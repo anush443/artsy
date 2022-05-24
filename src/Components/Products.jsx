@@ -43,7 +43,7 @@ const Select = styled.select`
   ${mobile({ margin: "10px 0" })}
 `;
 
-const Products = ({ cat, filters, sort }) => {
+const Products = ({ cat, filters, sort, title }) => {
   //console.log(cat, filter, sort, title);
 
   const [artworks, setArtworks] = useState([]);
@@ -106,6 +106,7 @@ const Products = ({ cat, filters, sort }) => {
 
   return (
     <>
+      {!cat && <Header>{title}</Header>}
       {cat && (
         <FilterContainer>
           <Filter>

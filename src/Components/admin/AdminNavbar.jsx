@@ -8,13 +8,15 @@ const Logo = styled.h1`
   color: black;
 `;
 const LeftContainer = styled.div`
-  padding: 30px;
-  width: 250px;
-  height: auto;
-  display: absolute;
+  height: 100%;
+  width: 200px;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
   background-color: white;
-  align-items: center;
-  padding-left: 25px;
+  overflow-x: hidden;
+  padding: 30px;
   text-align: center;
 `;
 const Links = styled.h3`
@@ -52,16 +54,25 @@ const AdminNavbar = () => {
         <Link to="/artist" style={{ textDecoration: "none", color: "black" }}>
           <Links>Artists</Links>
         </Link>
-        <Link to="/artwork" style={{ textDecoration: "none", color: "black" }}>
+        <Link
+          to="/admin/artworks"
+          style={{ textDecoration: "none", color: "black" }}
+        >
           <Links>Artwork</Links>
         </Link>
         <Link to="/events" style={{ textDecoration: "none", color: "black" }}>
           <Links>Events</Links>
         </Link>
-        <Link to="/" style={{ textDecoration: "none", color: "black" }}>
+        <Link
+          to="/orderlist"
+          style={{ textDecoration: "none", color: "black" }}
+        >
           <Links>Orders</Links>
         </Link>
-        <Link to="/" style={{ textDecoration: "none", color: "black" }}>
+        <Link
+          to="/paymentlist"
+          style={{ textDecoration: "none", color: "black" }}
+        >
           <Links>Payment</Links>
         </Link>
         <button
